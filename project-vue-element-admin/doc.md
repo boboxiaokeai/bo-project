@@ -30,3 +30,18 @@
       4.5 在vue.config.js文件下配置
       4.6 在@/icons/index.js中组件注册 Vue.component('svg-icon', SvgIcon)
       
+5.配置vue-router
+    5.1 安装 ：npm install vue-router
+    5.2 router目录下生成index.vue
+    5.3 配置router的index.vue
+    ...
+    
+    
+6.配置vuex
+    6.1 安装：npm install vuex --save  
+    ...
+    
+    
+7.配置axios
+    7.1 安装：npm install --save axios
+    ...
