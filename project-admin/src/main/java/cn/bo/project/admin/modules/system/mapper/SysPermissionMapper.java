@@ -1,0 +1,43 @@
+package cn.bo.project.admin.modules.system.mapper;
+
+import cn.bo.project.admin.modules.system.entity.SysPermission;
+import cn.bo.project.admin.modules.system.model.TreeModel;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+
+/**
+ * @Author zhangbo
+ * @Date 2020/1/6 16:50
+ * @Description 权限mapper接口
+ * @PackageName cn.bo.project.admin.modules.system.mapper
+ **/
+public interface SysPermissionMapper extends BaseMapper<SysPermission> {
+	/**
+	   * 通过父菜单ID查询子菜单
+	 * @param parentId
+	 * @return
+	 */
+	public List<TreeModel> queryListByParentId(@Param("parentId") String parentId);
+	
+	/**
+	  *   根据用户查询用户权限
+	 */
+	public List<SysPermission> queryByUser(@Param("username") String username);
+	
+	/**
+	 *   修改菜单状态字段： 是否子节点
+	 */
+	@Update("update sys_permission set is_leaf=#{leaf} where id = #{id}")
+	public int setMenuLeaf(@Param("id") String id, @Param("leaf") int leaf);
+	
+	/**
+	  *   获取模糊匹配规则的数据权限URL
+	 */
+	@Select("SELECT url FROM sys_permission WHERE del_flag = 0 and menu_type = 2 and url like '%*%'")
+    public List<String> queryPermissionUrlWithStar();
+
+}

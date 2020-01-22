@@ -1,0 +1,47 @@
+package cn.bo.project.admin.modules.system.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+
+/**
+ * @Author zhangbo
+ * @Date 2020/1/8 16:25
+ * @Description 用户角色实体类
+ * @PackageName cn.bo.project.admin.modules.system.entity
+ **/
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+public class SysUserRole implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @TableId(type = IdType.ID_WORKER_STR)
+    private String id;
+    
+    /**
+     * 用户id
+     */
+    private String userId;
+
+    /**
+     * 角色id
+     */
+    private String roleId;
+
+	public SysUserRole() {
+	}
+
+	public SysUserRole(String userId, String roleId) {
+		this.userId = userId;
+		this.roleId = roleId;
+	}
+
+    
+
+}
