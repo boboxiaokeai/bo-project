@@ -6,6 +6,12 @@
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
+    <p>
+      <span class="svg-container">
+            icon显示<svg-icon icon-class="user" />
+      </span>
+      <el-button :plain="true" @click="open2">点击测试element-ui</el-button>
+    </p>
     <h3>Installed CLI Plugins</h3>
     <ul>
       <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
@@ -35,12 +41,19 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  methods:{
+    open2() {
+      this.$message({
+        message: '恭喜你，这是一条成功消息',
+        type: 'success'
+      });
+    },
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
 h3 {
   margin: 40px 0 0;
 }
