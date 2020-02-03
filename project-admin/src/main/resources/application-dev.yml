@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8081
   tomcat:
     #请求正文的最大值，10MB, -1不限制
     max-swallow-size: -1

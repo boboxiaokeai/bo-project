@@ -1,6 +1,6 @@
 'use strict'
 const path = require('path')
-const port = process.env.port || process.env.npm_config_port || 80
+const port = process.env.port || process.env.npm_config_port || 8080
 
 const name = 'project vue element admin' // page title
 

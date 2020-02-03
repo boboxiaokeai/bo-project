@@ -86,7 +86,11 @@ public interface CommonConstant {
     public static final String PREFIX_USER_TOKEN  = "prefix_user_token_";
     /** Token缓存时间：3600秒即一小时 */
     public static final int  TOKEN_EXPIRE_TIME  = 3600;
-    
+
+    /**
+     * 验证码 redis key
+     */
+    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
 
     /**
      *  0：一级菜单

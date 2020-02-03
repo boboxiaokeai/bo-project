@@ -10,10 +10,10 @@ import cn.bo.project.base.constant.CacheConstant;
 import cn.bo.project.base.constant.CommonConstant;
 import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.core.model.LoginUser;
-import cn.bo.project.base.utils.JwtUtil;
-import cn.bo.project.base.utils.PasswordUtil;
-import cn.bo.project.base.utils.RedisUtil;
-import cn.bo.project.base.utils.oConvertUtils;
+import cn.bo.project.base.utils.*;
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.SecurityUtils;
@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author scott
@@ -125,4 +129,32 @@ public class LoginController {
 		return ResultBean;
 	}
 
+	/**
+	 * 获取验证码
+	 * @return
+	 */
+	@RequestMapping(value = "/captchaImage", method = RequestMethod.GET)
+	private ResultBean<Map<String,String>> getCodeImage() throws IOException {
+		ResultBean<Map<String,String>> resultBean = new ResultBean<>();
+		Map<String,String> map = new HashMap<String,String>();
+		// 生成随机字串
+		String verifyCode = RandomUtil.randomString(4);
+		// 唯一标识
+		String uuid = IdUtil.randomUUID();
+		redisUtil.set(CommonConstant.CAPTCHA_CODE_KEY+uuid,verifyCode,120);
+		try {
+			// 生成图片
+			int w = 111, h = 36;
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			VerifyCodeUtils.outputImage(w, h, stream, verifyCode);
+			map.put("uuid", uuid);
+			map.put("img", Base64.encode(stream.toByteArray()));
+			resultBean.setResult(map);
+			resultBean.success("获取成功");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return resultBean.error404("获取验证码失败");
+		}
+		return  resultBean;
+	}
 }
