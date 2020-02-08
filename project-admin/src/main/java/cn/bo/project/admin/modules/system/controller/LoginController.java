@@ -140,14 +140,14 @@ public class LoginController {
 		// 生成随机字串
 		String verifyCode = RandomUtil.randomString(4);
 		// 唯一标识
-		String uuid = IdUtil.randomUUID();
-		redisUtil.set(CommonConstant.CAPTCHA_CODE_KEY+uuid,verifyCode,120);
+		String codekey = IdUtil.simpleUUID();
+		redisUtil.set(CommonConstant.CAPTCHA_CODE_KEY+codekey,verifyCode,120);
 		try {
 			// 生成图片
 			int w = 111, h = 36;
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			VerifyCodeUtils.outputImage(w, h, stream, verifyCode);
-			map.put("uuid", uuid);
+			map.put("codekey", codekey);
 			map.put("img", Base64.encode(stream.toByteArray()));
 			resultBean.setResult(map);
 			resultBean.success("获取成功");

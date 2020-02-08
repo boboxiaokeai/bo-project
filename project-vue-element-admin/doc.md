@@ -39,6 +39,17 @@
     
 6.配置vuex
     6.1 安装：npm install vuex --save  
+    6.2 vuex核心概念: 
+        State(共享状态,即变量) 
+        Getter(基于state的派生状态，可理解为组件中的计算属性)
+        Mutation(更改vuex的store中状态的唯一方法,同步操作规则上是不允许异步操作的，虽然异步也可以执行，但是对devtool调试的状态跟踪或多个状态更改操作相互依赖是很不好的)
+        Action(类似mutation，不同之处，1.通过提交mutation修改状态   2.支持异步操作)
+        Module(模块，在大型项目中为了方便状态的管理和协作开发将store拆分为多个子模块（modules），
+        每个子模块拥有完整的state、mutation、action、getter)
+    6.3 创建store文件夹，创建index.js(名字随意)，引入vue和vuex
+    6.4 main.js中引入import store from './store' 注册store实例
+    6.5 创建modules文件夹，创建user.js
+        在user.js中声明user模块：const user = { state：{},mutations:{},actions:{} }
     ...
     
     

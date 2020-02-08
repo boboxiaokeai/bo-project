@@ -67,6 +67,7 @@
 <script>
   import { getCodeImg } from "@/api/login";
   import Cookies from "js-cookie";
+  import { Message } from 'element-ui'
   //import { encrypt, decrypt } from '@/utils/jsencrypt'
 
   export default {
@@ -77,11 +78,11 @@
         cookiePassword: "",
         passwordType: 'password',
         loginForm: {
-          username: "admin",
-          password: "admin123",
+          username: "jeecg",
+          password: "123456",
           rememberMe: false,
           code: "",
-          uuid: ""
+          codekey: ""
         },
         loginRules: {
           username: [
@@ -120,7 +121,7 @@
         getCodeImg().then(res => {
           //Data URI scheme data表示取得数据的协定名称，image/gif是数据类型名称，base64 是数据的编码方法，逗号后面就是这个image/png文件base64编码后的数据
           this.codeUrl = "data:image/gif;base64," + res.result.img;
-          this.loginForm.uuid = res.result.uuid;
+          this.loginForm.codekey = res.result.codekey;
         });
       },
       getCookie() {
@@ -160,6 +161,7 @@
                     .dispatch("Login", this.loginForm)
                     .then(() => {
                       this.loading = false;
+                      Message({message: '欢迎回来',type: 'success',duration: 3 * 1000})
                       this.$router.push({ path: this.redirect || "/" });
                     })
                     .catch(() => {
@@ -168,7 +170,7 @@
                     });
           }
         });
-      }
+      },
     }
   };
 </script>

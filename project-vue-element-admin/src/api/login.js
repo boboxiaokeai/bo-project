@@ -1,36 +1,34 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
-  const data = {
-    username,
-    password,
-    code,
-    uuid
-  }
+export function login(parameter) {
   return request({
-    url: '/login',
+    url: '/sys/login',
     method: 'post',
-    params: data
+    data: parameter
   })
 }
-
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/getInfo',
-    method: 'get'
+    url: '/api/user/info',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
   })
 }
-
 // 退出方法
-export function logout() {
+export function logout(logoutToken) {
   return request({
-    url: '/logout',
-    method: 'post'
+    url: '/sys/logout',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      'X-Access-Token':  logoutToken
+    }
   })
 }
-
 // 获取验证码
 export function getCodeImg() {
   return request({
