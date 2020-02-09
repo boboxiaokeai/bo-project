@@ -5,9 +5,9 @@ const user = {
   state: {
     token: getToken(),
     username: '',
-    realname: '',
     avatar: '',
-    permissionList: [],
+    roles: [],
+    permissions: [],
     info: {}
   },
 
@@ -15,19 +15,21 @@ const user = {
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_NAME: (state, { username, realname }) => {
+    SET_NAME: (state,username) => {
       state.username = username
-      state.realname = realname
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_PERMISSIONLIST: (state, permissionList) => {
-      state.permissionList = permissionList
-    },
     SET_INFO: (state, info) => {
       state.info = info
     },
+    SET_ROLES: (state, roles) => {
+      state.roles = roles
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
+    }
   },
 
   actions: {
@@ -37,10 +39,12 @@ const user = {
         login(userInfo).then(response => {
           if(response.code =='200'){
             const result = response.result
+            console.log(result)
+            const avatar = result.userInfo.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + result.userInfo.avatar;
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', result.userInfo)
-            commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname })
-            commit('SET_AVATAR', result.userInfo.avatar)
+            commit('SET_NAME', result.userInfo.username)
+            commit('SET_AVATAR', avatar)
             setToken(result.token)
             resolve(response)
           }else{
@@ -55,40 +59,14 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(res => {
-          const user = res.user
-          const avatar = user.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+          debugger
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
-          commit('SET_NAME', user.username)
-          commit('SET_AVATAR', avatar)
           resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 获取用户信息
-    GetPermissionList({ commit }) {
-      return new Promise((resolve, reject) => {
-        const v_token = getToken();
-        const params = {token:v_token};
-        queryPermissionsByUser(params).then(response => {
-          const menuData = response.result.menu;
-          const authData = response.result.auth;
-          const allAuthData = response.result.allAuth;
-          //Vue.ls.set(USER_AUTH,authData);
-          sessionStorage.setItem(USER_AUTH,JSON.stringify(authData));
-          sessionStorage.setItem(SYS_BUTTON_AUTH,JSON.stringify(allAuthData));
-          if (menuData && menuData.length > 0) {
-            commit('SET_PERMISSIONLIST', menuData)
-          } else {
-            reject('getPermissionList: permissions must be a non-null array !')
-          }
-          resolve(response)
         }).catch(error => {
           reject(error)
         })

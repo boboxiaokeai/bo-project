@@ -1,9 +1,14 @@
 package cn.bo.project.admin.modules.system.controller;
 
+import cn.bo.project.admin.modules.shiro.JwtToken;
 import cn.bo.project.admin.modules.shiro.model.DefContants;
+import cn.bo.project.admin.modules.system.entity.SysRole;
 import cn.bo.project.admin.modules.system.entity.SysUser;
+import cn.bo.project.admin.modules.system.entity.SysUserRole;
 import cn.bo.project.admin.modules.system.model.SysLoginModel;
 import cn.bo.project.admin.modules.system.service.ISysLogService;
+import cn.bo.project.admin.modules.system.service.ISysRoleService;
+import cn.bo.project.admin.modules.system.service.ISysUserRoleService;
 import cn.bo.project.admin.modules.system.service.ISysUserService;
 import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.CacheConstant;
@@ -14,7 +19,10 @@ import cn.bo.project.base.utils.*;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
@@ -27,8 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Log4j2
@@ -44,6 +51,8 @@ public class LoginController {
 	private ISysLogService logService;
 	@Autowired
     private RedisUtil redisUtil;
+	@Autowired
+	private ISysUserRoleService sysUserRoleService;
 
 	@ApiOperation("登录接口")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -57,9 +66,11 @@ public class LoginController {
 		redisUtil.del(CommonConstant.CAPTCHA_CODE_KEY+sysLoginModel.getCodekey());
 		if (code==null){
 			ResultBean.error500("验证码过期");
+			return ResultBean;
 		}
 		if (!code.equals(sysLoginModel.getCode())){
 			ResultBean.error500("验证码错误");
+			return ResultBean;
 		}
 		//2. 校验用户是否有效
 		SysUser sysUser = sysUserService.getUserByName(username);
@@ -88,7 +99,7 @@ public class LoginController {
 	 * @return
 	 */
 	@ApiOperation("退出登录接口")
-	@RequestMapping(value = "/logout")
+	@RequestMapping(value = "/logout",method = RequestMethod.POST)
 	public ResultBean<Object> logout(HttpServletRequest request, HttpServletResponse response) {
 		//用户退出逻辑
 	    String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
@@ -138,6 +149,27 @@ public class LoginController {
 		return ResultBean;
 	}
 
+	@GetMapping("getInfo")
+	public ResultBean<?> getInfo(HttpServletRequest request){
+		ResultBean<List<String>> resultBean = new ResultBean<>();
+		List<String> list = new ArrayList<String>();
+		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
+		if(oConvertUtils.isEmpty(token)) {
+			return ResultBean.error("token不能为空！");
+		}
+		List<SysUserRole> userRole = sysUserRoleService.list(new QueryWrapper<SysUserRole>().lambda().eq(SysUserRole::getUserId, "a75d45a015c44384a04449ee80dc3503"));
+		if (userRole == null || userRole.size() <= 0) {
+			resultBean.error500("未找到用户相关角色信息");
+		} else {
+			for (SysUserRole sysUserRole : userRole) {
+				list.add(sysUserRole.getRoleId());
+			}
+			resultBean.setSuccess(true);
+			resultBean.setResult(list);
+		}
+		return resultBean;
+	}
+
 	/**
 	 * 获取验证码
 	 * @return
@@ -159,6 +191,7 @@ public class LoginController {
 			VerifyCodeUtils.outputImage(w, h, stream, verifyCode);
 			map.put("codekey", codekey);
 			map.put("img", Base64.encode(stream.toByteArray()));
+			map.put("code", verifyCode);
 			resultBean.setResult(map);
 			resultBean.success("获取成功");
 		} catch (IOException e) {

@@ -2,7 +2,9 @@
 const path = require('path')
 const port = process.env.port || process.env.npm_config_port || 8080
 
-const name = 'project vue element admin' // page title
+const defaultSettings = require('./src/settings.js')
+
+const name = defaultSettings.title || 'project vue element admin' // 标题
 
 function resolve(dir) {
     return path.join(__dirname, dir)

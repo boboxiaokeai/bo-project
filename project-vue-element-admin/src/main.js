@@ -12,6 +12,10 @@ import 'normalize.css/normalize.css'
 
 import '@/icons' // icon
 
+import permission from './directive/permission'
+import './permission' // permission control
+
+Vue.use(permission)
 Vue.use(ElementUI, { size:'small' })
 
 Vue.config.productionTip = false

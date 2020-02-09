@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'project vue element admin',
 
   /**
    * @type {boolean} true | false
@@ -12,5 +12,11 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: true
+  sidebarLogo: true,
+
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the setting_button
+   */
+  showSettings:true
 }

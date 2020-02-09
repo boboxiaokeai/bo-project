@@ -11,11 +11,8 @@ export function login(parameter) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/api/user/info',
+    url: '/sys/getInfo',
     method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
   })
 }
 // 退出方法

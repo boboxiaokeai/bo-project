@@ -122,6 +122,7 @@
           //Data URI scheme data表示取得数据的协定名称，image/gif是数据类型名称，base64 是数据的编码方法，逗号后面就是这个image/png文件base64编码后的数据
           this.codeUrl = "data:image/gif;base64," + res.result.img;
           this.loginForm.codekey = res.result.codekey;
+          this.loginForm.code = res.result.code;
         });
       },
       getCookie() {
@@ -131,7 +132,8 @@
         this.loginForm = {
           username: username === undefined ? this.loginForm.username : username,
           password: password === undefined ? this.loginForm.password : password,
-          rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+          rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+          code:this.loginForm.code,
         };
       },
       showPwd() {
