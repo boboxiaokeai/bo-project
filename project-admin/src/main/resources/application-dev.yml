@@ -78,7 +78,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/project-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+          url: jdbc:mysql://127.0.0.1:3306/bo-project?characterEncoding=UTF-8&useUnicode=true&useSSL=false
           username: root
           password: 123456
           driver-class-name: com.mysql.jdbc.Driver
@@ -116,6 +116,7 @@ mybatis-plus:
     #configuration:
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: cn.bo.project.admin.modules.system.entity
 #Mybatis输出sql日志
 logging:
   level:

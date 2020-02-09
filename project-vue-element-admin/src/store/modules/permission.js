@@ -1,6 +1,7 @@
 import { constantRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
+import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const permission = {
   state: {
@@ -19,7 +20,8 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          const accessedRoutes = filterAsyncRouter(res.data)
+          debugger
+          const accessedRoutes = filterAsyncRouter(res.result.menu)
           accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
@@ -32,6 +34,7 @@ const permission = {
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap) {
   return asyncRouterMap.filter(route => {
+    debugger
     if (route.component) {
       // Layout组件特殊处理
       if (route.component === 'Layout') {

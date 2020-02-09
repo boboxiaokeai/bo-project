@@ -1,15 +1,10 @@
 package cn.bo.project.admin.modules.system.controller;
 
-import cn.bo.project.admin.modules.shiro.JwtToken;
 import cn.bo.project.admin.modules.shiro.model.DefContants;
-import cn.bo.project.admin.modules.system.entity.SysRole;
 import cn.bo.project.admin.modules.system.entity.SysUser;
 import cn.bo.project.admin.modules.system.entity.SysUserRole;
 import cn.bo.project.admin.modules.system.model.SysLoginModel;
-import cn.bo.project.admin.modules.system.service.ISysLogService;
-import cn.bo.project.admin.modules.system.service.ISysRoleService;
-import cn.bo.project.admin.modules.system.service.ISysUserRoleService;
-import cn.bo.project.admin.modules.system.service.ISysUserService;
+import cn.bo.project.admin.modules.system.service.*;
 import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.CacheConstant;
 import cn.bo.project.base.constant.CommonConstant;
@@ -19,9 +14,7 @@ import cn.bo.project.base.utils.*;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,11 +41,7 @@ public class LoginController {
 	@Autowired
 	private ISysBaseAPI sysBaseAPI;
 	@Autowired
-	private ISysLogService logService;
-	@Autowired
     private RedisUtil redisUtil;
-	@Autowired
-	private ISysUserRoleService sysUserRoleService;
 
 	@ApiOperation("登录接口")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -73,11 +62,8 @@ public class LoginController {
 			return ResultBean;
 		}
 		//2. 校验用户是否有效
-		SysUser sysUser = sysUserService.getUserByName(username);
-		ResultBean = sysUserService.checkUserIsEffective(sysUser);
-		if(!ResultBean.isSuccess()) {
-			return ResultBean;
-		}
+		SysUser sysUser = sysUserService.selectUserByUserName(username);
+
 		//3. 用户名或密码校验
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
@@ -134,7 +120,7 @@ public class LoginController {
 	 */
 	private ResultBean<JSONObject> userInfo(SysUser sysUser, ResultBean<JSONObject> ResultBean) {
 		String syspassword = sysUser.getPassword();
-		String username = sysUser.getUsername();
+		String username = sysUser.getUserName();
 		// 生成token
 		String token = JwtUtil.sign(username, syspassword);
         // 设置token缓存有效时间
@@ -147,27 +133,6 @@ public class LoginController {
 		ResultBean.setResult(obj);
 		ResultBean.success("登录成功");
 		return ResultBean;
-	}
-
-	@GetMapping("getInfo")
-	public ResultBean<?> getInfo(HttpServletRequest request){
-		ResultBean<List<String>> resultBean = new ResultBean<>();
-		List<String> list = new ArrayList<String>();
-		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
-		if(oConvertUtils.isEmpty(token)) {
-			return ResultBean.error("token不能为空！");
-		}
-		List<SysUserRole> userRole = sysUserRoleService.list(new QueryWrapper<SysUserRole>().lambda().eq(SysUserRole::getUserId, "a75d45a015c44384a04449ee80dc3503"));
-		if (userRole == null || userRole.size() <= 0) {
-			resultBean.error500("未找到用户相关角色信息");
-		} else {
-			for (SysUserRole sysUserRole : userRole) {
-				list.add(sysUserRole.getRoleId());
-			}
-			resultBean.setSuccess(true);
-			resultBean.setResult(list);
-		}
-		return resultBean;
 	}
 
 	/**

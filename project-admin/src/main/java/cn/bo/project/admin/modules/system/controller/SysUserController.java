@@ -43,7 +43,7 @@ public class SysUserController {
 	@ApiOperation("系统用户列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResultBean<IPage<SysUser>> queryPageList(SysUser user, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                    @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
+													@RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
         ResultBean<IPage<SysUser>> ResultBean = new ResultBean<IPage<SysUser>>();
 		QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
 		Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);

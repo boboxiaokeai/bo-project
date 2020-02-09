@@ -1,96 +1,97 @@
 package cn.bo.project.admin.modules.system.mapper;
 
 import cn.bo.project.admin.modules.system.entity.SysDict;
-import cn.bo.project.admin.modules.system.model.DuplicateCheckVo;
-import cn.bo.project.admin.modules.system.model.TreeSelectModel;
-import cn.bo.project.base.core.model.DictModel;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author zhangbo
- * @Date 2020/1/4 20:14
- * @Description 字典mapper接口
+ * @Date 2020/1/4 13:14
+ * @Description 系统字典mapper接口
  * @PackageName cn.bo.project.admin.modules.system.mapper
  **/
-public interface SysDictMapper extends BaseMapper<SysDict> {
-	
-	/**
-	  *  重复检查SQL
-	 * @return
-	 */
-	public Long duplicateCheckCountSql(DuplicateCheckVo duplicateCheckVo);
-	public Long duplicateCheckCountSqlNoDataId(DuplicateCheckVo duplicateCheckVo);
-	
-	public List<DictModel> queryDictItemsByCode(@Param("code") String code);
-	public List<DictModel> queryTableDictItemsByCode(@Param("table") String table, @Param("text") String text, @Param("code") String code);
-	public List<DictModel> queryTableDictItemsByCodeAndFilter(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("filterSql") String filterSql);
+public interface SysDictMapper{
 
+    /**
+     * 根据条件分页查询字典数据
+     * 
+     * @param dictData 字典数据信息
+     * @return 字典数据集合信息
+     */
+    public List<SysDict> selectDictDataList(SysDict dictData);
 
-	public String queryDictTextByKey(@Param("code") String code, @Param("key") String key);
+    /**
+     * 根据字典类型查询字典数据
+     * 
+     * @param dictType 字典类型
+     * @return 字典数据集合信息
+     */
+    public List<SysDict> selectDictDataByType(String dictType);
 
-	public String queryTableDictTextByKey(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("key") String key);
+    /**
+     * 根据字典类型和字典键值查询字典数据信息
+     * 
+     * @param dictType 字典类型
+     * @param dictValue 字典键值
+     * @return 字典标签
+     */
+    public String selectDictLabel(@Param("dictType") String dictType, @Param("dictValue") String dictValue);
 
-	public List<DictModel> queryTableDictByKeys(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("keyArray") String[] keyArray);
+    /**
+     * 根据字典数据ID查询信息
+     * 
+     * @param dictCode 字典数据ID
+     * @return 字典数据
+     */
+    public SysDict selectDictDataById(Long dictCode);
 
-	/**
-	 * 查询所有部门 作为字典信息 id -->value,departName -->text
-	 * @return
-	 */
-	public List<DictModel> queryAllDepartBackDictModel();
+    /**
+     * 查询字典数据
+     * 
+     * @param dictType 字典类型
+     * @return 字典数据
+     */
+    public int countDictDataByType(String dictType);
 
-	/**
-	 * 查询所有用户  作为字典信息 username -->value,realname -->text
-	 * @return
-	 */
-	public List<DictModel> queryAllUserBackDictModel();
+    /**
+     * 通过字典ID删除字典数据信息
+     * 
+     * @param dictCode 字典数据ID
+     * @return 结果
+     */
+    public int deleteDictDataById(Long dictCode);
 
-	/**
-	 * 通过关键字查询出字典表
-	 * @param table
-	 * @param text
-	 * @param code
-	 * @param keyword
-	 * @return
-	 */
-	public List<DictModel> queryTableDictItems(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("keyword") String keyword);
+    /**
+     * 批量删除字典数据信息
+     * 
+     * @param dictCodes 需要删除的字典数据ID
+     * @return 结果
+     */
+    public int deleteDictDataByIds(Long[] dictCodes);
 
-	/**
-	  * 根据表名、显示字段名、存储字段名 查询树
-	 * @param table
-	 * @param text
-	 * @param code
-	 * @param pid
-	 * @param hasChildField
-	 * @return
-	 */
-	List<TreeSelectModel> queryTreeList(@Param("query") Map<String, String> query, @Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("pidField") String pidField, @Param("pid") String pid, @Param("hasChildField") String hasChildField);
+    /**
+     * 新增字典数据信息
+     * 
+     * @param dictData 字典数据信息
+     * @return 结果
+     */
+    public int insertDictData(SysDict dictData);
 
-	/**
-	 * 删除
-	 * @param id
-	 */
-	@Select("delete from sys_dict where id = #{id}")
-	public void deleteOneById(@Param("id") String id);
+    /**
+     * 修改字典数据信息
+     * 
+     * @param dictData 字典数据信息
+     * @return 结果
+     */
+    public int updateDictData(SysDict dictData);
 
-	/**
-	 * 查询被逻辑删除的数据
-	 * @return
-	 */
-	@Select("select * from sys_dict where del_flag = 1")
-	public List<SysDict> queryDeleteList();
-
-	/**
-	 * 修改状态值
-	 * @param delFlag
-	 * @param id
-	 */
-	@Update("update sys_dict set del_flag = #{flag,jdbcType=INTEGER} where id = #{id,jdbcType=VARCHAR}")
-	public void updateDictDelFlag(@Param("flag") int delFlag, @Param("id") String id);
-
+    /**
+     * 同步修改字典类型
+     * 
+     * @param oldDictType 旧字典类型
+     * @param newDictType 新旧字典类型
+     * @return 结果
+     */
+    public int updateDictDataType(@Param("oldDictType") String oldDictType, @Param("newDictType") String newDictType);
 }

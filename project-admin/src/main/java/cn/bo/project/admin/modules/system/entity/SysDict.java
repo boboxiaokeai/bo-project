@@ -1,14 +1,9 @@
 package cn.bo.project.admin.modules.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import cn.bo.project.base.core.base.entity.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-
-import java.io.Serializable;
-import java.util.Date;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * @Author zhangbo
@@ -17,66 +12,34 @@ import java.util.Date;
  * @PackageName cn.bo.project.admin.modules.system.entity
  **/
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class SysDict implements Serializable {
-
+public class SysDict extends BaseEntity
+{
     private static final long serialVersionUID = 1L;
 
-    /**
-     * id
-     */
-    @TableId(type = IdType.ID_WORKER_STR)
-    private String id;
-    
-    /**
-     * [预留字段，暂时无用]
-     * 字典类型,0 string,1 number类型,2 boolean
-     * 前端js对stirng类型和number类型 boolean 类型敏感，需要区分。在select 标签匹配的时候会用到
-     * 默认为string类型
-     */
-    private Integer type;
-    
-    /**
-     * 字典名称
-     */
-    private String dictName;
+    /** 字典编码 */
+    private Long dictCode;
 
-    /**
-     * 字典编码
-     */
-    private String dictCode;
+    /** 字典排序 */
+    private Long dictSort;
 
-    /**
-     * 描述
-     */
-    private String description;
+    /** 字典标签 */
+    private String dictLabel;
 
-    /**
-     * 删除状态
-     */
-    @TableLogic
-    private Integer delFlag;
+    /** 字典键值 */
+    private String dictValue;
 
-    /**
-     * 创建人
-     */
-    private String createBy;
+    /** 字典类型 */
+    private String dictType;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+    /** 样式属性（其他样式扩展） */
+    private String cssClass;
 
-    /**
-     * 更新人
-     */
-    private String updateBy;
+    /** 表格字典样式 */
+    private String listClass;
 
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
+    /** 是否默认（Y是 N否） */
+    private String isDefault;
 
-
+    /** 状态（0正常 1停用） */
+    private String status;
 }

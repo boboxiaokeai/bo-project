@@ -1,47 +1,47 @@
 package cn.bo.project.admin.modules.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-
-import java.io.Serializable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * @Author zhangbo
- * @Date 2020/1/8 16:25
- * @Description 用户角色实体类
+ * @Date 2020/2/9 22:34
+ * @Description 用户和角色关联表实体类
  * @PackageName cn.bo.project.admin.modules.system.entity
  **/
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class SysUserRole implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @TableId(type = IdType.ID_WORKER_STR)
-    private String id;
+public class SysUserRole
+{
+    /** 用户ID */
+    private Long userId;
     
-    /**
-     * 用户id
-     */
-    private String userId;
+    /** 角色ID */
+    private Long roleId;
 
-    /**
-     * 角色id
-     */
-    private String roleId;
+    public Long getUserId()
+    {
+        return userId;
+    }
 
-	public SysUserRole() {
-	}
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
+    }
 
-	public SysUserRole(String userId, String roleId) {
-		this.userId = userId;
-		this.roleId = roleId;
-	}
+    public Long getRoleId()
+    {
+        return roleId;
+    }
 
-    
+    public void setRoleId(Long roleId)
+    {
+        this.roleId = roleId;
+    }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+            .append("userId", getUserId())
+            .append("roleId", getRoleId())
+            .toString();
+    }
 }

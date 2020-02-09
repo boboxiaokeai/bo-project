@@ -1,13 +1,10 @@
 package cn.bo.project.admin.modules.system.service;
 
+
 import cn.bo.project.admin.modules.system.entity.SysDict;
-import cn.bo.project.admin.modules.system.entity.SysDictItem;
-import cn.bo.project.admin.modules.system.model.TreeSelectModel;
-import cn.bo.project.base.core.model.DictModel;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author zhangbo
@@ -15,85 +12,69 @@ import java.util.Map;
  * @Description 字典service接口
  * @PackageName cn.bo.project.admin.modules.system.service
  **/
-public interface ISysDictService extends IService<SysDict> {
-
-    public List<DictModel> queryDictItemsByCode(String code);
-
-    List<DictModel> queryTableDictItemsByCode(String table, String text, String code);
-    
-	public List<DictModel> queryTableDictItemsByCodeAndFilter(String table, String text, String code, String filterSql);
-
-    public String queryDictTextByKey(String code, String key);
-
-	String queryTableDictTextByKey(String table, String text, String code, String key);
-
-	List<String> queryTableDictByKeys(String table, String text, String code, String[] keyArray);
-
+public interface ISysDictService {
     /**
-     * 根据字典类型删除关联表中其对应的数据
-     *
-     * @param sysDict
-     * @return
+     * 根据条件分页查询字典数据
+     * 
+     * @param dictData 字典数据信息
+     * @return 字典数据集合信息
      */
-    boolean deleteByDictId(SysDict sysDict);
+    public List<SysDict> selectDictDataList(SysDict dictData);
 
     /**
-     * 添加一对多
+     * 根据字典类型查询字典数据
+     * 
+     * @param dictType 字典类型
+     * @return 字典数据集合信息
      */
-    public void saveMain(SysDict sysDict, List<SysDictItem> sysDictItemList);
-    
+    public List<SysDict> selectDictDataByType(String dictType);
+
     /**
-	 * 查询所有部门 作为字典信息 id -->value,departName -->text
-	 * @return
-	 */
-	public List<DictModel> queryAllDepartBackDictModel();
-	
-	/**
-	 * 查询所有用户  作为字典信息 username -->value,realname -->text
-	 * @return
-	 */
-	public List<DictModel> queryAllUserBackDictModel();
-	
-	/**
-	 * 通过关键字查询字典表
-	 * @param table
-	 * @param text
-	 * @param code
-	 * @param keyword
-	 * @return
-	 */
-	public List<DictModel> queryTableDictItems(String table, String text, String code, String keyword);
+     * 根据字典类型和字典键值查询字典数据信息
+     * 
+     * @param dictType 字典类型
+     * @param dictValue 字典键值
+     * @return 字典标签
+     */
+    public String selectDictLabel(String dictType, String dictValue);
 
-	/**
-	  * 根据表名、显示字段名、存储字段名 查询树
-	 * @param table
-	 * @param text
-	 * @param code
-	 * @param pidField
-	 * @param pid
-	 * @param hasChildField
-	 * @return
-	 */
-	List<TreeSelectModel> queryTreeList(Map<String, String> query, String table, String text, String code, String pidField, String pid, String hasChildField);
+    /**
+     * 根据字典数据ID查询信息
+     * 
+     * @param dictCode 字典数据ID
+     * @return 字典数据
+     */
+    public SysDict selectDictDataById(Long dictCode);
 
-	/**
-	 * 真实删除
-	 * @param id
-	 */
-	public void deleteOneDictPhysically(String id);
+    /**
+     * 通过字典ID删除字典数据信息
+     * 
+     * @param dictCode 字典数据ID
+     * @return 结果
+     */
+    public int deleteDictDataById(Long dictCode);
 
-	/**
-	 * 修改delFlag
-	 * @param delFlag
-	 * @param id
-	 */
-	public void updateDictDelFlag(int delFlag, String id);
+    /**
+     * 批量删除字典数据信息
+     * 
+     * @param dictCodes 需要删除的字典数据ID
+     * @return 结果
+     */
+    public int deleteDictDataByIds(Long[] dictCodes);
 
-	/**
-	 * 查询被逻辑删除的数据
-	 * @return
-	 */
-	public List<SysDict> queryDeleteList();
+    /**
+     * 新增保存字典数据信息
+     * 
+     * @param dictData 字典数据信息
+     * @return 结果
+     */
+    public int insertDictData(SysDict dictData);
 
-
+    /**
+     * 修改保存字典数据信息
+     * 
+     * @param dictData 字典数据信息
+     * @return 结果
+     */
+    public int updateDictData(SysDict dictData);
 }

@@ -37,6 +37,7 @@ const user = {
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
+          debugger
           if(response.code =='200'){
             const result = response.result
             console.log(result)
@@ -60,9 +61,9 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(res => {
           debugger
-          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.roles)
-            commit('SET_PERMISSIONS', res.permissions)
+          if (res.result && res.result.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', res.result)
+            //commit('SET_PERMISSIONS', res.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }

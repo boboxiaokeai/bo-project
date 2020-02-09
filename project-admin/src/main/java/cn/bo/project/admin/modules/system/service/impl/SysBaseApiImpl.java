@@ -4,7 +4,6 @@ import cn.bo.project.admin.modules.system.entity.SysLog;
 import cn.bo.project.admin.modules.system.entity.SysUser;
 import cn.bo.project.admin.modules.system.mapper.SysLogMapper;
 import cn.bo.project.admin.modules.system.mapper.SysUserMapper;
-import cn.bo.project.base.constant.CacheConstant;
 import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.core.model.ComboModel;
 import cn.bo.project.base.core.model.DictModel;
@@ -13,22 +12,15 @@ import cn.bo.project.base.core.model.SysDepartModel;
 import cn.bo.project.base.utils.IPUtils;
 import cn.bo.project.base.utils.SpringContextUtils;
 import cn.bo.project.base.utils.oConvertUtils;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -87,7 +79,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 			return null;
 		}
 		LoginUser loginUser = new LoginUser();
-		SysUser sysUser = userMapper.getUserByName(username);
+		SysUser sysUser = userMapper.selectUserByUserName(username);
 		if(sysUser==null) {
 			return null;
 		}

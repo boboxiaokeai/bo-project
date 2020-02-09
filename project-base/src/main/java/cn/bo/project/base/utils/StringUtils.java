@@ -1,10 +1,8 @@
 package cn.bo.project.base.utils;
 
-
 import cn.bo.project.base.core.text.StrFormatter;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @Author zhangbo
@@ -257,6 +255,57 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
             return template;
         }
         return StrFormatter.format(template, params);
+    }
+
+    /**
+     * 字符串转set
+     * 
+     * @param str 字符串
+     * @param sep 分隔符
+     * @return set集合
+     */
+    public static final Set<String> str2Set(String str, String sep)
+    {
+        return new HashSet<String>(str2List(str, sep, true, false));
+    }
+
+    /**
+     * 字符串转list
+     * 
+     * @param str 字符串
+     * @param sep 分隔符
+     * @param filterBlank 过滤纯空白
+     * @param trim 去掉首尾空白
+     * @return list集合
+     */
+    public static final List<String> str2List(String str, String sep, boolean filterBlank, boolean trim)
+    {
+        List<String> list = new ArrayList<String>();
+        if (StringUtils.isEmpty(str))
+        {
+            return list;
+        }
+
+        // 过滤空白字符串
+        if (filterBlank && StringUtils.isBlank(str))
+        {
+            return list;
+        }
+        String[] split = str.split(sep);
+        for (String string : split)
+        {
+            if (filterBlank && StringUtils.isBlank(string))
+            {
+                continue;
+            }
+            if (trim)
+            {
+                string = string.trim();
+            }
+            list.add(string);
+        }
+
+        return list;
     }
 
     /**
