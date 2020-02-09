@@ -15,6 +15,8 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.SecurityUtils;
 
@@ -28,12 +30,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @Author scott
- * @since 2018-12-17
- */
+
 @Log4j2
 @RestController
+@Api(tags="用户登录")
 @RequestMapping("/sys")
 public class LoginController {
 	@Autowired
@@ -45,27 +45,35 @@ public class LoginController {
 	@Autowired
     private RedisUtil redisUtil;
 
+	@ApiOperation("登录接口")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResultBean<JSONObject> login(@RequestBody SysLoginModel sysLoginModel){
 		ResultBean<JSONObject> ResultBean = new ResultBean<JSONObject>();
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
 
-		//1. 校验用户是否有效
+		//1. 验证码校验
+		String code = String.valueOf(redisUtil.get(CommonConstant.CAPTCHA_CODE_KEY+sysLoginModel.getCodekey()));
+		redisUtil.del(CommonConstant.CAPTCHA_CODE_KEY+sysLoginModel.getCodekey());
+		if (code==null){
+			ResultBean.error500("验证码过期");
+		}
+		if (!code.equals(sysLoginModel.getCode())){
+			ResultBean.error500("验证码错误");
+		}
+		//2. 校验用户是否有效
 		SysUser sysUser = sysUserService.getUserByName(username);
 		ResultBean = sysUserService.checkUserIsEffective(sysUser);
 		if(!ResultBean.isSuccess()) {
 			return ResultBean;
 		}
-		
-		//2. 校验用户名或密码是否正确
+		//3. 用户名或密码校验
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
 		if (!syspassword.equals(userpassword)) {
 			ResultBean.error500("用户名或密码错误");
 			return ResultBean;
 		}
-				
 		//用户登录信息
 		userInfo(sysUser, ResultBean);
 		sysBaseAPI.addLog("用户: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
@@ -79,6 +87,7 @@ public class LoginController {
 	 * @param response
 	 * @return
 	 */
+	@ApiOperation("退出登录接口")
 	@RequestMapping(value = "/logout")
 	public ResultBean<Object> logout(HttpServletRequest request, HttpServletResponse response) {
 		//用户退出逻辑
@@ -133,6 +142,7 @@ public class LoginController {
 	 * 获取验证码
 	 * @return
 	 */
+	@ApiOperation("获取验证码接口")
 	@RequestMapping(value = "/captchaImage", method = RequestMethod.GET)
 	private ResultBean<Map<String,String>> getCodeImage() throws IOException {
 		ResultBean<Map<String,String>> resultBean = new ResultBean<>();

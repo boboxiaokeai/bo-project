@@ -4,28 +4,30 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     token: getToken(),
-    name: '',
+    username: '',
+    realname: '',
     avatar: '',
-    roles: [],
-    permissions: []
+    permissionList: [],
+    info: {}
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_NAME: (state, name) => {
-      state.name = name
+    SET_NAME: (state, { username, realname }) => {
+      state.username = username
+      state.realname = realname
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_PERMISSIONLIST: (state, permissionList) => {
+      state.permissionList = permissionList
     },
-    SET_PERMISSIONS: (state, permissions) => {
-      state.permissions = permissions
-    }
+    SET_INFO: (state, info) => {
+      state.info = info
+    },
   },
 
   actions: {
@@ -37,6 +39,7 @@ const user = {
             const result = response.result
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', result.userInfo)
+            commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname })
             commit('SET_AVATAR', result.userInfo.avatar)
             setToken(result.token)
             resolve(response)
@@ -68,7 +71,29 @@ const user = {
         })
       })
     },
-
+    // 获取用户信息
+    GetPermissionList({ commit }) {
+      return new Promise((resolve, reject) => {
+        const v_token = getToken();
+        const params = {token:v_token};
+        queryPermissionsByUser(params).then(response => {
+          const menuData = response.result.menu;
+          const authData = response.result.auth;
+          const allAuthData = response.result.allAuth;
+          //Vue.ls.set(USER_AUTH,authData);
+          sessionStorage.setItem(USER_AUTH,JSON.stringify(authData));
+          sessionStorage.setItem(SYS_BUTTON_AUTH,JSON.stringify(allAuthData));
+          if (menuData && menuData.length > 0) {
+            commit('SET_PERMISSIONLIST', menuData)
+          } else {
+            reject('getPermissionList: permissions must be a non-null array !')
+          }
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {

@@ -1,7 +1,9 @@
 package cn.bo.project.admin.modules.system.service.impl;
 
 import cn.bo.project.admin.modules.system.entity.SysLog;
+import cn.bo.project.admin.modules.system.entity.SysUser;
 import cn.bo.project.admin.modules.system.mapper.SysLogMapper;
+import cn.bo.project.admin.modules.system.mapper.SysUserMapper;
 import cn.bo.project.base.constant.CacheConstant;
 import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.core.model.ComboModel;
@@ -44,7 +46,8 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	
 	@Resource
 	private SysLogMapper sysLogMapper;
-
+	@Autowired
+	private SysUserMapper userMapper;
 	
 	@Override
 	public void addLog(String LogContent, Integer logType, Integer operatetype) {
@@ -80,7 +83,16 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 
 	@Override
 	public LoginUser getUserByName(String username) {
-		return null;
+		if(oConvertUtils.isEmpty(username)) {
+			return null;
+		}
+		LoginUser loginUser = new LoginUser();
+		SysUser sysUser = userMapper.getUserByName(username);
+		if(sysUser==null) {
+			return null;
+		}
+		BeanUtils.copyProperties(sysUser, loginUser);
+		return loginUser;
 	}
 
 	@Override
