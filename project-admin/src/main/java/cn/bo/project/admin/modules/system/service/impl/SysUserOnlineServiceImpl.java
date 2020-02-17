@@ -32,7 +32,7 @@ public class SysUserOnlineServiceImpl  implements ISysUserOnlineService {
     @Override
     public SysUserOnline selectOnlineByUserName(String userName, LoginUser user)
     {
-        if (StringUtils.equals(userName, user.getUsername()))
+        if (StringUtils.equals(userName, user.getUserName()))
         {
             return loginUserToUserOnline(user);
         }

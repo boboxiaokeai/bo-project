@@ -22,17 +22,17 @@ public class LoginUser {
 	/**
 	 * 登录人id
 	 */
-	private String id;
+	private Long id;
 
 	/**
 	 * 登录人账号
 	 */
-	private String username;
+	private String userName;
 
 	/**
 	 * 登录人名字
 	 */
-	private String realname;
+	private String realName;
 
 	/**
 	 * 登录人密码
@@ -42,7 +42,7 @@ public class LoginUser {
      /**
       * 当前登录部门code
       */
-    private String orgCode;
+    private String deptId;
 	/**
 	 * 头像
 	 */

@@ -57,7 +57,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		String username = null;
 		if (principals != null) {
             LoginUser sysUser = (LoginUser) principals.getPrimaryPrincipal();
-			username = sysUser.getUsername();
+			username = sysUser.getUserName();
 		}
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 

@@ -4,11 +4,13 @@ import cn.bo.project.admin.modules.system.entity.*;
 import cn.bo.project.admin.modules.system.mapper.*;
 import cn.bo.project.admin.modules.system.service.ISysConfigService;
 import cn.bo.project.admin.modules.system.service.ISysUserService;
+import cn.bo.project.base.api.ResultBean;
+import cn.bo.project.base.constant.CommonConstant;
 import cn.bo.project.base.constant.UserConstants;
+import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.expection.BootProjectException;
 import cn.bo.project.base.utils.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    private ISysBaseAPI sysBaseAPI;
 
     /**
      * 根据条件分页查询用户列表
@@ -153,9 +158,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public String checkPhoneUnique(SysUser user)
     {
-        Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
-        SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
+        Long userId = StringUtils.isNull(user.getId()) ? -1L : user.getId();
+        SysUser info = userMapper.checkPhoneUnique(user.getPhone());
+        if (StringUtils.isNotNull(info) && info.getId().longValue() != userId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -171,9 +176,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public String checkEmailUnique(SysUser user)
     {
-        Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
+        Long userId = StringUtils.isNull(user.getId()) ? -1L : user.getId();
         SysUser info = userMapper.checkEmailUnique(user.getEmail());
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
+        if (StringUtils.isNotNull(info) && info.getId().longValue() != userId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
         }
@@ -187,7 +192,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     public void checkUserAllowed(SysUser user)
     {
-        if (StringUtils.isNotNull(user.getUserId()) && user.isAdmin())
+        if (StringUtils.isNotNull(user.getId()) && user.isAdmin(user.getId()))
         {
             throw new BootProjectException("不允许操作超级管理员用户");
         }
@@ -222,7 +227,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Transactional
     public int updateUser(SysUser user)
     {
-        Long userId = user.getUserId();
+        Long userId = user.getId();
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
         // 新增用户与角色管理
@@ -310,7 +315,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             for (Long roleId : roles)
             {
                 SysUserRole ur = new SysUserRole();
-                ur.setUserId(user.getUserId());
+                ur.setUserId(user.getId());
                 ur.setRoleId(roleId);
                 list.add(ur);
             }
@@ -336,7 +341,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             for (Long postId : posts)
             {
                 SysUserPost up = new SysUserPost();
-                up.setUserId(user.getUserId());
+                up.setUserId(user.getId());
                 up.setPostId(postId);
                 list.add(up);
             }
@@ -373,7 +378,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     {
         for (Long userId : userIds)
         {
-            checkUserAllowed(new SysUser(userId));
+            checkUserAllowed(new SysUser());
         }
         return userMapper.deleteUserByIds(userIds);
     }
@@ -381,5 +386,34 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName) {
         return null;
+    }
+
+    /**
+     * 校验用户是否有效
+     * @param sysUser
+     * @return
+     */
+    @Override
+    public ResultBean<?> checkUserIsEffective(SysUser sysUser) {
+        ResultBean<?> result = new ResultBean<Object>();
+        //情况1：根据用户信息查询，该用户不存在
+        if (sysUser == null) {
+            result.error500("该用户不存在，请注册");
+            sysBaseAPI.addLog("用户登录失败，用户不存在！", CommonConstant.LOG_TYPE_1, null);
+            return result;
+        }
+        //情况2：根据用户信息查询，该用户已注销
+        if (CommonConstant.DEL_FLAG_1.toString().equals(sysUser.getDelFlag())) {
+            sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUserName() + "已注销！", CommonConstant.LOG_TYPE_1, null);
+            result.error500("该用户已注销");
+            return result;
+        }
+        //情况3：根据用户信息查询，该用户已冻结
+        if (CommonConstant.USER_FREEZE.equals(sysUser.getStatus())) {
+            sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUserName() + "已冻结！", CommonConstant.LOG_TYPE_1, null);
+            result.error500("该用户已冻结");
+            return result;
+        }
+        return result;
     }
 }

@@ -147,7 +147,7 @@ public class JwtUtil {
 		//替换为系统登录用户帐号
 		if (key.equals(DataBaseConstant.SYS_USER_CODE)|| key.equals(DataBaseConstant.SYS_USER_CODE_TABLE)) {
 			if(user==null) {
-				returnValue = sysUser.getUsername();
+				returnValue = sysUser.getUserName();
 			}else {
 				returnValue = user.getSysUserCode();
 			}
@@ -155,7 +155,7 @@ public class JwtUtil {
 		//替换为系统登录用户真实名字
 		else if (key.equals(DataBaseConstant.SYS_USER_NAME)|| key.equals(DataBaseConstant.SYS_USER_NAME_TABLE)) {
 			if(user==null) {
-				returnValue = sysUser.getRealname();
+				returnValue = sysUser.getRealName();
 			}else {
 				returnValue = user.getSysUserName();
 			}
@@ -164,7 +164,7 @@ public class JwtUtil {
 		//替换为系统用户登录所使用的机构编码
 		else if (key.equals(DataBaseConstant.SYS_ORG_CODE)|| key.equals(DataBaseConstant.SYS_ORG_CODE_TABLE)) {
 			if(user==null) {
-				returnValue = sysUser.getOrgCode();
+				returnValue = sysUser.getDeptId();
 			}else {
 				returnValue = user.getSysOrgCode();
 			}

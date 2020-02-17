@@ -20,7 +20,7 @@ public class BaseEntity {
 
     /** ID */
     @TableId(type = IdType.AUTO)
-    private String id;
+    private Long id;
     /** 创建人 */
     private String createBy;
     /** 创建时间 */

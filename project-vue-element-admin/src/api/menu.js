@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export const getRouters = () => {
 
   return request({
-    url: '/sys/permission/getUserPermissionByToken',
+    url: '/sys/getRouters',
     method: 'get'
   })
 }
