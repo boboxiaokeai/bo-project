@@ -18,11 +18,10 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const roleArray = store.getters.roles;
-      if (roleArray==undefined) {
+      if (store.getters.roles.length === 0) {
         // 判断是否已获取当前用户的user_info信息
         store.dispatch('GetInfo').then(res => {
-          const roles = res.result
+          const roles =  res.data.roles
           store.dispatch('GenerateRoutes', { roles }).then(accessRoutes => {
             router.addRoutes(accessRoutes) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成

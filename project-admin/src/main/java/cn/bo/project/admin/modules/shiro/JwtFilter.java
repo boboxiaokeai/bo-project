@@ -62,7 +62,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 			JSONObject obj = new JSONObject();
 			obj.put("success", false);
 			obj.put("message", "token丢失");
-			resultBean.setResult(obj);
+			resultBean.setData(obj);
 			response.setCharacterEncoding("utf-8");
 			response.getWriter().print(resultBean);
 			e.printStackTrace();

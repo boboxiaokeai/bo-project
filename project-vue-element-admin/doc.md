@@ -56,3 +56,8 @@
 7.配置axios
     7.1 安装：npm install --save axios
     ...
+8.配置vue-treeselect
+    8.1 安装：npm install --save @riophae/vue-treeselect
+
+9.配置 vue-cropper
+    9.1 安装：npm install --save vue-cropper

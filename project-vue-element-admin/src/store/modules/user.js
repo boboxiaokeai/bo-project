@@ -37,9 +37,8 @@ const user = {
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          debugger
           if(response.code =='200'){
-            const result = response.result
+            const result = response.data
             console.log(result)
             const avatar = result.userInfo.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + result.userInfo.avatar;
             commit('SET_TOKEN', result.token)
@@ -60,10 +59,9 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(res => {
-          debugger
-          if (res.result && res.result.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.result)
-            //commit('SET_PERMISSIONS', res.permissions)
+          if (res.data && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', res.data.roles)
+            commit('SET_PERMISSIONS', res.data.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }

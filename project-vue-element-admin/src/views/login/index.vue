@@ -119,10 +119,11 @@
     methods: {
       getCode() {
         getCodeImg().then(res => {
+          debugger
           //Data URI scheme data表示取得数据的协定名称，image/gif是数据类型名称，base64 是数据的编码方法，逗号后面就是这个image/png文件base64编码后的数据
-          this.codeUrl = "data:image/gif;base64," + res.result.img;
-          this.loginForm.codekey = res.result.codekey;
-          this.loginForm.code = res.result.code;
+          this.codeUrl = "data:image/gif;base64," + res.data.img;
+          this.loginForm.codekey = res.data.codekey;
+          this.loginForm.code = res.data.code;
         });
       },
       getCookie() {
@@ -160,16 +161,16 @@
               Cookies.remove('rememberMe');
             }
             this.$store
-                    .dispatch("Login", this.loginForm)
-                    .then(() => {
-                      this.loading = false;
-                      Message({message: '欢迎回来',type: 'success',duration: 3 * 1000})
-                      this.$router.push({ path: this.redirect || "/" });
-                    })
-                    .catch(() => {
-                      this.loading = false;
-                      this.getCode();
-                    });
+              .dispatch("Login", this.loginForm)
+              .then(() => {
+                this.loading = false;
+                Message({message: '欢迎回来',type: 'success',duration: 3 * 1000})
+                this.$router.push({ path: this.redirect || "/" });
+              })
+              .catch(() => {
+                this.loading = false;
+                this.getCode();
+              });
           }
         });
       },

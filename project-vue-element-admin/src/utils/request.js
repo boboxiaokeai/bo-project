@@ -101,6 +101,7 @@ service.interceptors.response.use(
      * Please return  response => response
      */
     response => {
+      debugger
       const res = response.data
       console.log("请求服务器获取到的数据："+JSON.stringify(res));
       if (res.code !== 200) {

@@ -9,6 +9,8 @@ import cn.bo.project.base.utils.oConvertUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +26,10 @@ import javax.servlet.http.HttpServletRequest;
  * @Description 系统日志控制器
  * @PackageName cn.bo.project.admin.modules.system.controller
  **/
+@Slf4j
+@Api(tags="日志API")
 @RestController
 @RequestMapping("/sys/log")
-@Slf4j
 public class SysLogController {
 	
 	@Autowired
@@ -40,6 +43,7 @@ public class SysLogController {
 	 * @param req
 	 * @return
 	 */
+	@ApiOperation("系统日志列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ResultBean<IPage<SysLog>> queryPageList(SysLog syslog, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 											   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
@@ -61,7 +65,7 @@ public class SysLogController {
 		log.info("查询结果数量："+pageList.getRecords().size());
 		log.info("数据总数："+pageList.getTotal());
 		result.setSuccess(true);
-		result.setResult(pageList);
+		result.setData(pageList);
 		return result;
 	}
 	

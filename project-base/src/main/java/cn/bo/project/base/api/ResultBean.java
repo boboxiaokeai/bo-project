@@ -29,12 +29,12 @@ public class ResultBean<T> implements Serializable {
 	/**
 	 * 返回代码
 	 */
-	private Integer code = 0;
+	private Integer code = 200;
 	
 	/**
 	 * 返回数据对象 data
 	 */
-	private T result;
+	private T data;
 	
 	/**
 	 * 时间戳
@@ -44,15 +44,15 @@ public class ResultBean<T> implements Serializable {
 	public ResultBean() {
 		
 	}
-	
+
 	public ResultBean<T> success(String message) {
 		this.message = message;
 		this.code = CommonConstant.SC_OK_200;
 		this.success = true;
 		return this;
 	}
-	
-	
+
+
 	public static ResultBean<Object> ok() {
 		ResultBean<Object> r = new ResultBean<Object>();
 		r.setSuccess(true);
@@ -60,7 +60,7 @@ public class ResultBean<T> implements Serializable {
 		r.setMessage("成功");
 		return r;
 	}
-	
+
 	public static ResultBean<Object> ok(String msg) {
 		ResultBean<Object> r = new ResultBean<Object>();
 		r.setSuccess(true);
@@ -68,12 +68,12 @@ public class ResultBean<T> implements Serializable {
 		r.setMessage(msg);
 		return r;
 	}
-	
+
 	public static ResultBean<Object> ok(Object data) {
 		ResultBean<Object> r = new ResultBean<Object>();
 		r.setSuccess(true);
 		r.setCode(CommonConstant.SC_OK_200);
-		r.setResult(data);
+		r.setData(data);
 		return r;
 	}
 	

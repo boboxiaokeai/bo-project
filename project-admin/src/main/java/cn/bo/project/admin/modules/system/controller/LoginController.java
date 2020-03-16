@@ -33,7 +33,7 @@ import java.util.*;
 
 @Log4j2
 @RestController
-@Api(tags="用户登录")
+@Api(tags="登录API")
 @RequestMapping("/sys")
 public class LoginController {
 	@Autowired
@@ -137,7 +137,7 @@ public class LoginController {
 		JSONObject obj = new JSONObject();
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
-		ResultBean.setResult(obj);
+		ResultBean.setData(obj);
 		ResultBean.success("登录成功");
 		return ResultBean;
 	}
@@ -164,7 +164,7 @@ public class LoginController {
 			map.put("codekey", codekey);
 			map.put("img", Base64.encode(stream.toByteArray()));
 			map.put("code", verifyCode);
-			resultBean.setResult(map);
+			resultBean.setData(map);
 			resultBean.success("获取成功");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -190,7 +190,7 @@ public class LoginController {
 		Set<String> permissions = permissionService.getMenuPermission(sysUser);
 		map.put("roles", roles);
 		map.put("permissions", permissions);
-		resultBean.setResult(map);
+		resultBean.setData(map);
 		resultBean.setCode(200);
 		resultBean.setSuccess(true);
 		return resultBean;
@@ -199,13 +199,11 @@ public class LoginController {
 
 	/**
 	 * 获取路由信息
-	 *
 	 * @return 路由信息
 	 */
 	@RequestMapping(value = "/getRouters", method = RequestMethod.GET)
 	public ResultBean getRouters(HttpServletRequest request, HttpServletResponse response)
 	{
-		ResultBean<JSONObject> resultBean = new ResultBean<>();
 		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
 		if(oConvertUtils.isEmpty(token)) {
 			return ResultBean.error("token不能为空！");
@@ -217,9 +215,6 @@ public class LoginController {
 		List<RouterModel> RouterModel = menuService.buildMenus(menus);
 		JSONObject obj = new JSONObject();
 		obj.put("menu", RouterModel);
-		resultBean.setResult(obj);
-		resultBean.setCode(200);
-		resultBean.setSuccess(true);
-		return resultBean;
+		return ResultBean.ok(obj);
 	}
 }
