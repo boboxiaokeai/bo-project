@@ -73,7 +73,7 @@ public class LoginUser {
 	/**
 	 * 状态(1：正常 2：冻结 ）
 	 */
-	private Integer status;
+	private String status;
 
 	private String delFlag;
 	/**

@@ -78,7 +78,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public List<SysMenu> selectMenuTreeByUserId(Long userId)
     {
         List<SysMenu> menus = null;
-        menus = menuMapper.selectMenuTreeByUserId(userId);
+        if (userId != null && 1L == userId)
+        {
+            menus = menuMapper.selectMenuTreeAll();
+        }
+        else
+        {
+            menus = menuMapper.selectMenuTreeByUserId(userId);
+        }
         return getChildPerms(menus, 0);
     }
 

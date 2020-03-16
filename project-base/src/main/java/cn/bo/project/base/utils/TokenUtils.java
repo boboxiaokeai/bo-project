@@ -44,7 +44,7 @@ public class TokenUtils {
             throw new AuthenticationException("用户不存在!");
         }
         // 判断用户状态
-        if (user.getStatus() != 1) {
+        if ( !"0".equals(user.getStatus())) {
             throw new AuthenticationException("账号已被锁定,请联系管理员!");
         }
         // 校验token是否超时失效 & 或者账号密码是否错误

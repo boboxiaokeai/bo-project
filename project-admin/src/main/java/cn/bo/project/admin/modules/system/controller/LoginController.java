@@ -44,6 +44,8 @@ public class LoginController {
     private RedisUtil redisUtil;
 	@Autowired
 	private ISysMenuService menuService;
+	@Autowired
+	private SysPermissionService permissionService;
 
 	@ApiOperation("登录接口")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -171,7 +173,7 @@ public class LoginController {
 		return  resultBean;
 	}
 
-/*	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
 	public ResultBean getInfo(HttpServletRequest request) {
 		ResultBean<Map<String,Set<String>>> resultBean = new ResultBean<>();
 		Map<String, Set<String>> map = new HashMap<>();
@@ -192,7 +194,7 @@ public class LoginController {
 		resultBean.setCode(200);
 		resultBean.setSuccess(true);
 		return resultBean;
-	}*/
+	}
 
 
 	/**
