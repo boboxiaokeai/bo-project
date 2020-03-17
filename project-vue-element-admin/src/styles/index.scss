@@ -63,3 +63,32 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+.pagination-container {
+  margin-top: 30px;
+}
+
+.pagination-container {
+  position: relative;
+  height: 25px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  padding: 10px 20px !important;
+}
+
+.pagination-container .el-pagination {
+  right: 0;
+  position: absolute;
+}
+
+.mb8 {
+  margin-bottom: 8px;
+}
+
+.el-table .el-table__header-wrapper th {
+  word-break: break-word;
+  background-color: #f8f8f9;
+  color: #515a6e;
+  height: 40px;
+  font-size: 13px;
+}

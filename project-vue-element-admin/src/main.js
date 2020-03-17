@@ -15,9 +15,13 @@ import '@/icons' // icon
 import permission from './directive/permission'
 import './permission' // permission control
 import Pagination from "@/components/Pagination";
+import { getDicts } from "@/api/system/dict/data";
+import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, download } from "@/utils/common";
 
 // 全局方法挂载
+Vue.prototype.getDicts = getDicts
+Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
