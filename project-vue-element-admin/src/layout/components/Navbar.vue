@@ -5,28 +5,35 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">Log Out</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+        <template v-if="device!=='mobile'">
+
+            <search id="header-search" class="right-menu-item" />
+
+            <screenfull id="screenfull" class="right-menu-item hover-effect" />
+
+        </template>
+
+        <el-avatar shape="circle" class="user-avatar" size="medium" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+
+        <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="hover">
+
+            <div class="avatar-wrapper">
+                <span class="el-dropdown-link">小可爱<i class="el-icon-arrow-down el-icon--right"></i></span>
+            </div>
+
+            <el-dropdown-menu slot="dropdown">
+                <router-link to="/user/profile">
+                    <el-dropdown-item>个人中心</el-dropdown-item>
+                </router-link>
+                <el-dropdown-item>
+                    <span @click="setting = true">布局设置</span>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                    <span @click="logout">退出登录</span>
+                </el-dropdown-item>
+            </el-dropdown-menu>
+
+        </el-dropdown>
     </div>
   </div>
 </template>
@@ -35,16 +42,21 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Screenfull from '@/components/Screenfull'
+import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Screenfull,
+    Search
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'device'
     ])
   },
   methods: {
@@ -52,9 +64,16 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('LogOut')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
+          this.$confirm('确定注销并退出系统吗？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+          }).then(() => {
+              this.$store.dispatch('LogOut').then(() => {
+                  location.reload()
+              })
+          })
+     }
   }
 }
 </script>
@@ -89,6 +108,10 @@ export default {
     height: 100%;
     line-height: 50px;
 
+    .user-avatar {
+        vertical-align: super;
+    }
+
     &:focus {
       outline: none;
     }
@@ -112,17 +135,15 @@ export default {
     }
 
     .avatar-container {
-      margin-right: 30px;
+      margin-right: 10px;
 
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
 
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+        .el-dropdown-link{
+           font-size: 14px;
+           vertical-align: text-bottom;
         }
 
         .el-icon-caret-bottom {
