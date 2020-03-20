@@ -1,11 +1,11 @@
 package cn.bo.project.admin.modules.shiro;
 
 import cn.bo.project.admin.modules.shiro.model.DefContants;
-import cn.bo.project.base.api.ResultBean;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -13,6 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @Author zhangbo
@@ -23,26 +25,29 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
 
-	/**
-	 * 执行登录认证
-	 * @param request
-	 * @param response
-	 * @param mappedValue
-	 * @return
-	 */
+	//执行顺序：preHandle->isAccessAllowed->isLoginAttempt->sendChallenge
+
 	@Override
-	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-		try {
-			executeLogin(request, response);
-			return true;
-		} catch (Exception e) {
-			throw new AuthenticationException("Token失效，请重新登录", e);
+	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws UnauthorizedException {
+		if (isLoginAttempt(request, response)) {
+			try {
+				return executeLogin(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		return false;
 	}
 
-	/**
-	 *
-	 */
+	//判断request中请求头是否包含token
+	@Override
+	protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+		HttpServletRequest req = (HttpServletRequest) request;
+		String token = req.getHeader(DefContants.X_ACCESS_TOKEN);
+		return token != null;
+	}
+
+	//request中请求头中包含token,提交给realm进行登入 doGetAuthenticationInfo校验token有效性
 	@Override
 	protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -52,24 +57,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 		String token = httpServletRequest.getHeader(DefContants.X_ACCESS_TOKEN);
 
 		JwtToken jwtToken = new JwtToken(token);
-		try {
-			// 提交给realm进行登入，如果错误他会抛出异常并被捕获
-			getSubject(request, response).login(jwtToken);
-			// 如果没有抛出异常则代表登入成功，返回true
-			return true;
-		} catch (AuthenticationException e) {
-			ResultBean<JSONObject> resultBean = new ResultBean<>();
-			JSONObject obj = new JSONObject();
-			obj.put("success", false);
-			obj.put("message", "token丢失");
-			resultBean.setData(obj);
-			response.setCharacterEncoding("utf-8");
-			response.getWriter().print(resultBean);
-			e.printStackTrace();
-			return false;
-		}
+		// 提交给realm进行登入，如果错误他会抛出异常并被捕获
+		getSubject(request, response).login(jwtToken);
+		// 如果没有抛出异常则代表登入成功，返回true
+		return true;
 	}
-
 
 	/**
 	 * 对跨域提供支持
@@ -87,5 +79,24 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 			return false;
 		}
 		return super.preHandle(request, response);
+	}
+
+	//重写sendChallenge方法 response返回JSON格式数据
+	@Override
+	protected boolean sendChallenge(ServletRequest request, ServletResponse response) {
+		log.debug("Authentication required: sending 401 Authentication challenge response.");
+		HttpServletResponse httpResponse = WebUtils.toHttp(response);
+		httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+		httpResponse.setCharacterEncoding("utf-8");
+		httpResponse.setContentType("application/json; charset=utf-8");
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status","203");
+		jsonObject.put("message","token丢失");
+		try (PrintWriter out = httpResponse.getWriter()) {
+			out.print(jsonObject.toJSONString());
+		} catch (IOException e) {
+			log.error("sendChallenge error：", e);
+		}
+		return false;
 	}
 }
