@@ -43,7 +43,7 @@ const user = {
             const avatar = result.userInfo.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + result.userInfo.avatar;
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', result.userInfo)
-            commit('SET_NAME', result.userInfo.username)
+            commit('SET_NAME', result.userInfo.userName)
             commit('SET_AVATAR', avatar)
             setToken(result.token)
             resolve(response)
