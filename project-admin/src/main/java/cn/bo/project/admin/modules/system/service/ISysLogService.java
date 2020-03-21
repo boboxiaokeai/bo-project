@@ -50,4 +50,6 @@ public interface ISysLogService extends IService<SysLog> {
 	 * @return
 	 */
 	List<Map<String,Object>> findVisitCount(Date dayStart, Date dayEnd);
+
+	List<SysLog> selectUserLog(String userName);
 }

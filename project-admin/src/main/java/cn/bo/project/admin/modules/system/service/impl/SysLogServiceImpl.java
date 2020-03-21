@@ -62,4 +62,9 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
 		}
 		return null;
 	}
+
+	@Override
+	public List<SysLog> selectUserLog(String userName) {
+		return sysLogMapper.selectUserLog(userName);
+	}
 }
