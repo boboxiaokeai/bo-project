@@ -58,7 +58,7 @@ public class LoginUser {
 	/**
 	 * 性别（1：男 2：女）
 	 */
-	private Integer sex;
+	private String sex;
 
 	/**
 	 * 电子邮件

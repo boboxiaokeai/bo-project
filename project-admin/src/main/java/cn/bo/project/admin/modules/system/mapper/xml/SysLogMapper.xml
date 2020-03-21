@@ -66,4 +66,9 @@
      </if>
     </select>
 
+    <!-- 获取用户登录日志 -->
+    <select id="selectUserLog" resultType="cn.bo.project.admin.modules.system.entity.SysLog">
+        select * from sys_log where username = #{userName} order by create_time
+    </select>
+
 </mapper>
