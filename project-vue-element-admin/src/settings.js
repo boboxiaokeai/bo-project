@@ -18,5 +18,11 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the setting_button
    */
-  showSettings:true
+  showSettings:false,
+
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the tagsView
+   */
+  tagsView: true,
 }
