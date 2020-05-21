@@ -48,10 +48,10 @@
 </style>
 
 <style lang="scss">
-// fix css style bug in open el-dialog
-.el-popup-parent--hidden {
-  .fixed-header {
-    padding-right: 15px;
+  // fix css style bug in open el-dialog
+  .el-popup-parent--hidden {
+    .fixed-header {
+      padding-right: 15px;
+    }
   }
-}
 </style>
