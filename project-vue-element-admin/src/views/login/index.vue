@@ -163,7 +163,12 @@
               .dispatch("Login", this.loginForm)
               .then(() => {
                 this.loading = false;
-                Message({message: '欢迎回来',type: 'success',duration: 3 * 1000})
+                this.$notify({
+                  title: '欢迎回来',
+                  message: this.loginForm.username,
+                  type: 'success'
+                });
+                //Message({message: '欢迎回来',type: 'success',duration: 3 * 1000})
                 this.$router.push({ path: this.redirect || "/" });
               })
               .catch(() => {
