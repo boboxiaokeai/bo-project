@@ -61,3 +61,6 @@
 
 9.配置 vue-cropper
     9.1 安装：npm install --save vue-cropper
+    
+    
+10.

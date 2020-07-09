@@ -54,7 +54,7 @@
                                 placeholder="用户状态"
                                 clearable
                                 size="small"
-                                style="width: 240px"
+                                style="width: 160px"
                         >
                             <el-option
                                     v-for="dict in statusOptions"
@@ -198,7 +198,7 @@
         </el-row>
 
         <!-- 添加或修改参数配置对话框 -->
-        <el-dialog :title="title" :visible.sync="open" width="600px">
+        <el-dialog :title="title" :visible.sync="open">
             <el-form ref="form" :model="form" :rules="rules" label-width="80px">
                 <el-row>
                     <el-col :span="12">
@@ -244,18 +244,6 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="状态">
-                            <el-radio-group v-model="form.status">
-                                <el-radio
-                                        v-for="dict in statusOptions"
-                                        :key="dict.dictValue"
-                                        :label="dict.dictValue"
-                                >{{dict.dictLabel}}</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :span="12">
                         <el-form-item label="岗位">
                             <el-select v-model="form.postIds" multiple placeholder="请选择">
                                 <el-option
@@ -279,6 +267,17 @@
                                         :disabled="item.status == 1"
                                 ></el-option>
                             </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="状态">
+                            <el-radio-group v-model="form.status">
+                                <el-radio
+                                        v-for="dict in statusOptions"
+                                        :key="dict.dictValue"
+                                        :label="dict.dictValue"
+                                >{{dict.dictLabel}}</el-radio>
+                            </el-radio-group>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
@@ -661,3 +660,14 @@ export default {
     }
 };
 </script>
+
+<style>
+    .el-dialog__title {
+        line-height: 24px;
+        font-size: 18px;
+        color: #409eff;
+    }
+    .el-dialog__headerbtn .el-dialog__close:hover{
+        color:#f56c6c;
+    }
+</style>

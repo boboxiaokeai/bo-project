@@ -19,6 +19,9 @@
     <modules>
         <module>project-admin</module>
         <module>project-base</module>
+        <module>project-quartz</module>
+        <module>project-gen</module>
+        <module>project-elasticsearch</module>
     </modules>
 
     <repositories>
@@ -103,11 +106,6 @@
             <version>5.1.47</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- Quartz定时任务 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
         <!--JWT-->
         <dependency>
             <groupId>com.auth0</groupId>
@@ -169,10 +167,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
