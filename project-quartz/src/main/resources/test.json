@@ -1,0 +1,9 @@
+
+{
+  "jobName": "cn.bo.project.project.quartz.task.QuartzTestTask",
+  "jobGroup": "group1",
+  "jobDescription": "新增定时任务，jobName为实现Job接口的类全路径,cronExpression为该job执行周期，调用接口/job/add",
+  "cronExpression": "0/5 * * * * ? *"
+}
+
+

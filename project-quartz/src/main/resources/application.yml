@@ -1,1 +1,29 @@
+server:
+  port: 8800
 
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/bo-project?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: root
+    password: 123456
+  quartz:
+    job-store-type: jdbc #持久化到数据库
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instancName: clusteredScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX #持久化方式配置
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate #StdJDBCDelegate说明支持集群
+            tablePrefix: qrtz_ #quartz相关数据表前缀名
+            isClustered: false #开启分布式部署
+            clusterCheckinInterval: 10000 #分布式节点有效性检查时间间隔，单位：毫秒
+            useProperties: true #配置是否使用
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool  #线程池实现类
+            threadCount: 10 #执行最大并发线程数量
+            threadPriority: 5 #线程优先级
+            threadsInheritContextClassLoaderOfInitializingThread: true #配置是否启动自动加载数据库内的定时任务，默认true
