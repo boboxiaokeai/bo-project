@@ -3,6 +3,12 @@ package cn.bo.project.project.quartz.Response;
 
 import lombok.Data;
 
+/**
+ * @Author zhangbo
+ * @Date 2020/6/23 23:10
+ * @Description ResponseData
+ * @PackageName cn.bo.project.project.quartz.Response
+ **/
 @Data
 public class ResponseData {
 

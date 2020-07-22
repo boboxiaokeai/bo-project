@@ -1,6 +1,12 @@
 package cn.bo.project.project.quartz.Response;
 
 
+/**
+ * @Author zhangbo
+ * @Date 2020/6/23 23:10
+ * @Description SuccessResponseData
+ * @PackageName cn.bo.project.project.quartz.Response
+ **/
 public class SuccessResponseData extends ResponseData{
 
 

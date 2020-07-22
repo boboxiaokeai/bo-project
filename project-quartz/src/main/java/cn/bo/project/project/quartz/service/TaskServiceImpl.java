@@ -13,6 +13,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * @Author zhangbo
+ * @Date 2020/6/23 23:10
+ * @Description TaskServiceImpl
+ * @PackageName cn.bo.project.project.quartz.service
+ **/
 @Service
 public class TaskServiceImpl implements TaskService{
 

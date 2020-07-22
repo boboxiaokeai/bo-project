@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 /**
  * @Author zhangbo
  * @Date 2020/6/23 23:10
@@ -19,23 +20,23 @@ import java.util.stream.Collectors;
  **/
 @Api(tags = "定时任务Api")
 @RestController
-@RequestMapping("job")
+@RequestMapping("/job")
 public class TaskController {
 
     @Autowired
     private TaskService taskService;
 
-    @PutMapping()
+    @PostMapping("/add")
     @ApiOperation("新增定时任务")
     public ResponseData addJob(@RequestBody TaskInfo taskInfo){
         return taskService.addJob(taskInfo);
     }
 
-    @GetMapping
+    @GetMapping("/get")
     @ApiOperation("定时任务列表")
     public ResponseData getJobs(String jobDescription) {
         List<TaskInfo> taskInfoList = taskService.queryJobList();
-        if (taskInfoList!=null && taskInfoList.size()>0) {
+        if (taskInfoList!=null && taskInfoList.size()>0 && jobDescription!=null) {
             taskInfoList = taskInfoList.stream()
                     .filter((TaskInfo taskInfo) -> taskInfo.getJobDescription().contains(jobDescription))
                     .collect(Collectors.toList());
@@ -43,27 +44,27 @@ public class TaskController {
         return ResponseData.success(taskInfoList);
     }
 
-    @PostMapping
+    @PostMapping("/edit")
     @ApiOperation("定时任务编辑")
     public ResponseData editJob(TaskInfo taskInfo) {
         return taskService.editJob(taskInfo);
     }
 
-    @DeleteMapping
+    @PostMapping("/del")
     @ApiOperation("定时任务删除")
     public ResponseData delJob(String jobName, String jobGroup) {
         taskService.deleteJob(jobName,jobGroup);
         return ResponseData.success();
     }
 
-    @PostMapping
+    @PostMapping("/pause")
     @ApiOperation("定时任务暂停")
     public ResponseData pauseJob(String jobName, String jobGroup) {
         taskService.pauseJob(jobName,jobGroup);
         return ResponseData.success();
     }
 
-    @PostMapping
+    @PostMapping("/resume")
     @ApiOperation("恢复暂停的定时任务")
     public ResponseData resumeJob(String jobName, String jobGroup) {
         taskService.resumeJob(jobName,jobGroup);

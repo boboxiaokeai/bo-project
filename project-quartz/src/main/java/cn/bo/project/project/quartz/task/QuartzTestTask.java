@@ -22,7 +22,7 @@ public class QuartzTestTask implements Job {
         SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = simpleDateFormat.parse(simpleDateFormat.format(new Date()));
-            System.out.println("QuartzTestTask开始执行,currentTime:"+date.getTime());
+            System.out.println("QuartzTestTask开始执行,currentTime:"+date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
