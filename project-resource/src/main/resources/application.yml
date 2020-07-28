@@ -1,0 +1,14 @@
+server:
+  port: 8844
+
+aliyun:
+  #oss域名
+  ossUrl:
+  #endpoint地域节点
+  ossEndpoint:
+  #Bucket域名
+  ossBucketName:
+  #accessKeyId
+  ossAccessKey:
+  #accessKeySecret
+  ossAccessKeySecret:
