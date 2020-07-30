@@ -2,8 +2,8 @@ package cn.bo.project.admin.modules.system.controller;
 
 import cn.bo.project.admin.modules.system.entity.SysDictType;
 import cn.bo.project.admin.modules.system.service.ISysDictTypeService;
-import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.UserConstants;
+import cn.bo.project.base.response.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,60 +29,52 @@ public class SysDictTypeController {
 
     @ApiOperation("字典类型列表")
     @GetMapping("/list")
-    public ResultBean list(SysDictType dictType)
-    {
+    public ResponseData list(SysDictType dictType) {
         List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        return ResultBean.ok(list);
+        return ResponseData.success(list);
     }
 
 
     @ApiOperation("字典类型详情")
     @GetMapping(value = "/{dictId}")
-    public ResultBean getInfo(@PathVariable Long dictId)
-    {
-        return ResultBean.ok(dictTypeService.selectDictTypeById(dictId));
+    public ResponseData getInfo(@PathVariable Long dictId) {
+        return ResponseData.success(dictTypeService.selectDictTypeById(dictId));
     }
 
 
     @ApiOperation("字典类型新增")
     @PostMapping
-    public ResultBean add(@Validated @RequestBody SysDictType dict)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict)))
-        {
-            return ResultBean.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
+    public ResponseData add(@Validated @RequestBody SysDictType dict) {
+        if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict))) {
+            return ResponseData.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
         dict.setCreateBy("admin");
-        return ResultBean.ok(dictTypeService.insertDictType(dict));
+        return ResponseData.success(dictTypeService.insertDictType(dict));
     }
 
 
     @ApiOperation("字典类型更新")
     @PutMapping
-    public ResultBean edit(@Validated @RequestBody SysDictType dict)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict)))
-        {
-            return ResultBean.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
+    public ResponseData edit(@Validated @RequestBody SysDictType dict) {
+        if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict))) {
+            return ResponseData.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
         dict.setUpdateBy("admin");
-        return ResultBean.ok(dictTypeService.updateDictType(dict));
+        return ResponseData.success(dictTypeService.updateDictType(dict));
     }
 
 
     @ApiOperation("字典类型删除")
     @DeleteMapping("/{dictIds}")
-    public ResultBean remove(@PathVariable Long[] dictIds)
-    {
-        return ResultBean.ok(dictTypeService.deleteDictTypeByIds(dictIds));
+    public ResponseData remove(@PathVariable Long[] dictIds) {
+        return ResponseData.success(dictTypeService.deleteDictTypeByIds(dictIds));
     }
 
 
     @ApiOperation("获取字典选择框列表")
     @GetMapping("/select")
-    public ResultBean select()
-    {
+    public ResponseData select() {
         List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
-        return ResultBean.ok(dictTypes);
+        return ResponseData.success(dictTypes);
     }
 }

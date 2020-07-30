@@ -6,11 +6,11 @@ import cn.bo.project.admin.modules.system.entity.SysUser;
 import cn.bo.project.admin.modules.system.model.RouterModel;
 import cn.bo.project.admin.modules.system.model.SysLoginModel;
 import cn.bo.project.admin.modules.system.service.*;
-import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.CacheConstant;
 import cn.bo.project.base.constant.CommonConstant;
 import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.core.model.LoginUser;
+import cn.bo.project.base.response.ResponseData;
 import cn.bo.project.base.utils.*;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
@@ -50,40 +50,29 @@ public class LoginController {
 
 	@ApiOperation("登录接口")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResultBean<JSONObject> login(@RequestBody SysLoginModel sysLoginModel){
-		ResultBean<JSONObject> ResultBean = new ResultBean<JSONObject>();
+	public ResponseData login(@RequestBody SysLoginModel sysLoginModel){
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
 
-		//1. 验证码校验
 		String code = String.valueOf(redisUtil.get(CommonConstant.CAPTCHA_CODE_KEY+sysLoginModel.getCodekey()));
 		redisUtil.del(CommonConstant.CAPTCHA_CODE_KEY+sysLoginModel.getCodekey());
 		if (code==null){
-			ResultBean.error500("验证码过期");
-			return ResultBean;
+			return ResponseData.error("验证码过期");
 		}
 		if (!code.equals(sysLoginModel.getCode())){
-			ResultBean.error500("验证码错误");
-			return ResultBean;
+			return ResponseData.error("验证码错误");
 		}
-		//2. 校验用户是否有效
 		SysUser sysUser = sysUserService.selectUserByUserName(username);
-		ResultBean = sysUserService.checkUserIsEffective(sysUser);
-		if(!ResultBean.isSuccess()) {
-			return ResultBean;
-		}
-		//3. 用户名或密码校验
+		sysUserService.checkUserIsEffective(sysUser);
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
 		if (!syspassword.equals(userpassword)) {
-			ResultBean.error500("用户名或密码错误");
-			return ResultBean;
+			return ResponseData.error("用户名或密码错误");
 		}
-		//用户登录信息
-		userInfo(sysUser, ResultBean);
+//		userInfo(sysUser, ResponseData);
 		sysBaseAPI.addLog("用户: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
 
-		return ResultBean;
+		return ResponseData.success();
 	}
 	
 	/**
@@ -94,11 +83,11 @@ public class LoginController {
 	 */
 	@ApiOperation("退出登录接口")
 	@RequestMapping(value = "/logout",method = RequestMethod.POST)
-	public ResultBean<Object> logout(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseData logout(HttpServletRequest request, HttpServletResponse response) {
 		//用户退出逻辑
 	    String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
 		if(oConvertUtils.isEmpty(token)) {
-			return ResultBean.error("退出登录失败！");
+			return ResponseData.error("退出登录失败！");
 		}
 		String username = JwtUtil.getUsername(token);
 		LoginUser sysUser = sysBaseAPI.getUserByName(username);
@@ -113,9 +102,9 @@ public class LoginController {
 			redisUtil.del(String.format("%s::%s", CacheConstant.SYS_USERS_CACHE, sysUser.getUserName()));
 			//调用shiro的logout
 			SecurityUtils.getSubject().logout();
-	    	return ResultBean.ok("退出登录成功！");
+	    	return ResponseData.success("退出登录成功！");
 	    }else {
-	    	return ResultBean.error("Token无效!");
+	    	return ResponseData.error("Token无效!");
 	    }
 	}
 	
@@ -123,10 +112,9 @@ public class LoginController {
 	/**
 	 * 用户信息
 	 * @param sysUser
-	 * @param ResultBean
 	 * @return
 	 */
-	private ResultBean<JSONObject> userInfo(SysUser sysUser, ResultBean<JSONObject> ResultBean) {
+	private ResponseData userInfo(SysUser sysUser) {
 		String syspassword = sysUser.getPassword();
 		String username = sysUser.getUserName();
 		// 生成token
@@ -138,9 +126,7 @@ public class LoginController {
 		JSONObject obj = new JSONObject();
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
-		ResultBean.setData(obj);
-		ResultBean.success("登录成功");
-		return ResultBean;
+		return ResponseData.success(obj);
 	}
 
 	/**
@@ -149,9 +135,8 @@ public class LoginController {
 	 */
 	@ApiOperation("获取验证码接口")
 	@RequestMapping(value = "/captchaImage", method = RequestMethod.GET)
-	private ResultBean<Map<String,String>> getCodeImage() throws IOException {
-		ResultBean<Map<String,String>> resultBean = new ResultBean<>();
-		Map<String,String> map = new HashMap<String,String>();
+	private ResponseData getCodeImage() throws IOException {
+		Map<String,String> map = new HashMap<String,String>(3);
 		// 生成随机字串
 		String verifyCode = RandomUtil.randomString(4);
 		// 唯一标识
@@ -165,23 +150,20 @@ public class LoginController {
 			map.put("codekey", codekey);
 			map.put("img", Base64.encode(stream.toByteArray()));
 			map.put("code", verifyCode);
-			resultBean.setData(map);
-			resultBean.success("获取成功");
+			ResponseData.success("获取成功");
 		} catch (IOException e) {
 			e.printStackTrace();
-			return resultBean.error404("获取验证码失败");
+			return ResponseData.error("获取验证码失败");
 		}
-		return  resultBean;
+		return  ResponseData.success();
 	}
 
 	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
-	public ResultBean getInfo(HttpServletRequest request) {
-		ResultBean<Map<String,Set<String>>> resultBean = new ResultBean<>();
+	public ResponseData getInfo(HttpServletRequest request) {
 		Map<String, Set<String>> map = new HashMap<>();
 		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
 		if(oConvertUtils.isEmpty(token)) {
-			resultBean.error500("验证码过期");
-			return resultBean;
+			return ResponseData.error("验证码过期");
 		}
 		String username = JwtUtil.getUsername(token);
 		SysUser sysUser = sysUserService.selectUserByUserName(username);
@@ -191,10 +173,7 @@ public class LoginController {
 		Set<String> permissions = permissionService.getMenuPermission(sysUser);
 		map.put("roles", roles);
 		map.put("permissions", permissions);
-		resultBean.setData(map);
-		resultBean.setCode(200);
-		resultBean.setSuccess(true);
-		return resultBean;
+		return ResponseData.success(map);
 	}
 
 
@@ -203,11 +182,11 @@ public class LoginController {
 	 * @return 路由信息
 	 */
 	@RequestMapping(value = "/getRouters", method = RequestMethod.GET)
-	public ResultBean getRouters(HttpServletRequest request, HttpServletResponse response)
+	public ResponseData getRouters(HttpServletRequest request)
 	{
 		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
 		if(oConvertUtils.isEmpty(token)) {
-			return ResultBean.error("token不能为空！");
+			return ResponseData.error("token不能为空！");
 		}
 		String username = JwtUtil.getUsername(token);
 		LoginUser sysUser = sysBaseAPI.getUserByName(username);
@@ -216,7 +195,7 @@ public class LoginController {
 		List<RouterModel> RouterModel = menuService.buildMenus(menus);
 		JSONObject obj = new JSONObject();
 		obj.put("menu", RouterModel);
-		return ResultBean.ok(obj);
+		return ResponseData.success(obj);
 	}
 
 	public static void main(String[] args) {

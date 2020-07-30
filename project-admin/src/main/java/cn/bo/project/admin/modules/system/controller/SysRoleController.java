@@ -2,8 +2,8 @@ package cn.bo.project.admin.modules.system.controller;
 
 import cn.bo.project.admin.modules.system.entity.SysRole;
 import cn.bo.project.admin.modules.system.service.ISysRoleService;
-import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.UserConstants;
+import cn.bo.project.base.response.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -30,87 +30,76 @@ public class SysRoleController {
 
     @ApiOperation("用户角色列表")
     @GetMapping("/list")
-    public ResultBean queryPageList(SysRole role)
-    {
+    public ResponseData queryPageList(SysRole role) {
         List<SysRole> list = sysRoleService.selectRoleList(role);
-        return ResultBean.ok(list);
+        return ResponseData.success(list);
     }
 
 
     @ApiOperation("角色详情")
     @GetMapping(value = "/{roleId}")
-    public ResultBean getInfo(@PathVariable Long roleId)
-    {
-        return ResultBean.ok(sysRoleService.selectRoleById(roleId));
+    public ResponseData getInfo(@PathVariable Long roleId) {
+        return ResponseData.success(sysRoleService.selectRoleById(roleId));
     }
 
 
     @ApiOperation("角色新增")
     @PostMapping
-    public ResultBean add(@Validated @RequestBody SysRole role)
-    {
-        if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleNameUnique(role)))
-        {
-            return ResultBean.error("新增角色'" + role.getRoleName() + "'失败，角色名称已存在");
+    public ResponseData add(@Validated @RequestBody SysRole role) {
+        if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleNameUnique(role))) {
+            return ResponseData.error("新增角色'" + role.getRoleName() + "'失败，角色名称已存在");
         }
-        else if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleKeyUnique(role)))
-        {
-            return ResultBean.error("新增角色'" + role.getRoleName() + "'失败，角色权限已存在");
+        else if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleKeyUnique(role))) {
+            return ResponseData.error("新增角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setCreateBy("admin");
-        return ResultBean.ok(sysRoleService.insertRole(role));
+        return ResponseData.success(sysRoleService.insertRole(role));
     }
 
 
     @ApiOperation("角色编辑")
     @PutMapping
-    public ResultBean edit(@Validated @RequestBody SysRole role)
-    {
+    public ResponseData edit(@Validated @RequestBody SysRole role) {
         sysRoleService.checkRoleAllowed(role);
-        if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleNameUnique(role)))
-        {
-            return ResultBean.error("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
+        if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleNameUnique(role))) {
+            return ResponseData.error("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
         }
-        else if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleKeyUnique(role)))
-        {
-            return ResultBean.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
+        else if (UserConstants.NOT_UNIQUE.equals(sysRoleService.checkRoleKeyUnique(role))) {
+            return ResponseData.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setUpdateBy("admin");
-        return ResultBean.ok(sysRoleService.updateRole(role));
+        return ResponseData.success(sysRoleService.updateRole(role));
     }
 
 
     @ApiOperation("修改保存数据权限")
     @PutMapping("/dataScope")
-    public ResultBean dataScope(@RequestBody SysRole role)
-    {
+    public ResponseData dataScope(@RequestBody SysRole role) {
         sysRoleService.checkRoleAllowed(role);
-        return ResultBean.ok(sysRoleService.authDataScope(role));
+        return ResponseData.success(sysRoleService.authDataScope(role));
     }
 
     @ApiOperation("状态修改")
     @PutMapping("/changeStatus")
-    public ResultBean changeStatus(@RequestBody SysRole role)
-    {
+    public ResponseData changeStatus(@RequestBody SysRole role) {
         sysRoleService.checkRoleAllowed(role);
         role.setUpdateBy("admin");
-        return ResultBean.ok(sysRoleService.updateRoleStatus(role));
+        return ResponseData.success(sysRoleService.updateRoleStatus(role));
     }
 
 
     @ApiOperation("删除角色")
     @DeleteMapping("/{roleIds}")
-    public ResultBean remove(@PathVariable Long[] roleIds)
-    {
-        return ResultBean.ok(sysRoleService.deleteRoleByIds(roleIds));
+    public ResponseData remove(@PathVariable Long[] roleIds) {
+        return ResponseData.success(sysRoleService.deleteRoleByIds(roleIds));
     }
 
 
     @ApiOperation("获取角色选择框列表")
     @GetMapping("/select")
-    public ResultBean select()
+    public ResponseData select()
     {
-        return ResultBean.ok(sysRoleService.selectRoleAll());
+        return ResponseData.success(sysRoleService.selectRoleAll());
     }
 
 }

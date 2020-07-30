@@ -24,7 +24,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
  * @author ${author}
  * @date ${datetime}
  * @Description
- * @PackageName ${packageName}
+ * @PackageName ${packageName}.controller
  */
 @RestController
 @RequestMapping("/${moduleName}/${businessName}")

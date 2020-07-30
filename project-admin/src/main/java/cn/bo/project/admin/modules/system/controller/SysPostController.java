@@ -2,8 +2,8 @@ package cn.bo.project.admin.modules.system.controller;
 
 import cn.bo.project.admin.modules.system.entity.SysPost;
 import cn.bo.project.admin.modules.system.service.ISysPostService;
-import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.UserConstants;
+import cn.bo.project.base.response.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -30,58 +30,54 @@ public class SysPostController {
 
     @ApiOperation("岗位列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResultBean queryPageList(SysPost sysPost, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                    @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req){
+    public ResponseData queryPageList(SysPost sysPost, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+                                      @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req){
         List<SysPost> pageList = sysPostService.selectPostList(sysPost);
-        return ResultBean.ok(pageList);
+        return ResponseData.success(pageList);
     }
 
     @ApiOperation("岗位详情")
     @GetMapping(value = "/{postId}")
-    public ResultBean getInfo(@PathVariable Long postId){
-        return ResultBean.ok(sysPostService.selectPostById(postId));
+    public ResponseData getInfo(@PathVariable Long postId){
+        return ResponseData.success(sysPostService.selectPostById(postId));
     }
 
     @ApiOperation("岗位新增")
     @PostMapping
-    public ResultBean add(@Validated @RequestBody SysPost post){
-        if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostNameUnique(post)))
-        {
-            return ResultBean.error("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
+    public ResponseData add(@Validated @RequestBody SysPost post){
+        if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostNameUnique(post))) {
+            return ResponseData.error("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
         }
-        else if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostCodeUnique(post)))
-        {
-            return ResultBean.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
+        else if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostCodeUnique(post))){
+            return ResponseData.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
         post.setCreateBy("admin");
-        return ResultBean.ok(sysPostService.insertPost(post));
+        return ResponseData.success(sysPostService.insertPost(post));
     }
 
     @ApiOperation("岗位编辑")
     @PutMapping
-    public ResultBean edit(@Validated @RequestBody SysPost post){
-        if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostNameUnique(post)))
-        {
-            return ResultBean.error("修改岗位'" + post.getPostName() + "'失败，岗位名称已存在");
+    public ResponseData edit(@Validated @RequestBody SysPost post){
+        if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostNameUnique(post))) {
+            return ResponseData.error("修改岗位'" + post.getPostName() + "'失败，岗位名称已存在");
         }
-        else if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostCodeUnique(post)))
-        {
-            return ResultBean.error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
+        else if (UserConstants.NOT_UNIQUE.equals(sysPostService.checkPostCodeUnique(post))) {
+            return ResponseData.error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
         post.setCreateBy("admin");
-        return ResultBean.ok(sysPostService.updatePost(post));
+        return ResponseData.success(sysPostService.updatePost(post));
     }
 
     @ApiOperation("岗位删除")
     @DeleteMapping("/{postIds}")
-    public ResultBean remove(@PathVariable Long[] postIds){
-        return ResultBean.ok(sysPostService.deletePostByIds(postIds));
+    public ResponseData remove(@PathVariable Long[] postIds){
+        return ResponseData.success(sysPostService.deletePostByIds(postIds));
     }
 
     @ApiOperation("获取岗位选择框列表")
     @GetMapping("/select")
-    public ResultBean select(){
+    public ResponseData select(){
         List<SysPost> posts = sysPostService.selectPostAll();
-        return ResultBean.ok(posts);
+        return ResponseData.success(posts);
     }
 }

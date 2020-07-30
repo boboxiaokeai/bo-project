@@ -4,11 +4,11 @@ import cn.bo.project.admin.modules.system.entity.*;
 import cn.bo.project.admin.modules.system.mapper.*;
 import cn.bo.project.admin.modules.system.service.ISysConfigService;
 import cn.bo.project.admin.modules.system.service.ISysUserService;
-import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.CommonConstant;
 import cn.bo.project.base.constant.UserConstants;
 import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.expection.BootProjectException;
+import cn.bo.project.base.response.ResponseData;
 import cn.bo.project.base.utils.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
@@ -190,6 +190,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * 
      * @param user 用户信息
      */
+    @Override
     public void checkUserAllowed(SysUser user)
     {
         if (StringUtils.isNotNull(user.getId()) && user.isAdmin(user.getId()))
@@ -270,6 +271,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @param avatar 头像地址
      * @return 结果
      */
+    @Override
     public boolean updateUserAvatar(String userName, String avatar)
     {
         return userMapper.updateUserAvatar(userName, avatar) > 0;
@@ -394,26 +396,22 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return
      */
     @Override
-    public ResultBean<?> checkUserIsEffective(SysUser sysUser) {
-        ResultBean<?> result = new ResultBean<Object>();
+    public ResponseData checkUserIsEffective(SysUser sysUser) {
         //情况1：根据用户信息查询，该用户不存在
         if (sysUser == null) {
-            result.error500("该用户不存在，请注册");
             sysBaseAPI.addLog("用户登录失败，用户不存在！", CommonConstant.LOG_TYPE_1, null);
-            return result;
+            return ResponseData.error("该用户不存在，请注册");
         }
         //情况2：根据用户信息查询，该用户已注销
         if (CommonConstant.DEL_FLAG_1.toString().equals(sysUser.getDelFlag())) {
             sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUserName() + "已注销！", CommonConstant.LOG_TYPE_1, null);
-            result.error500("该用户已注销");
-            return result;
+            return ResponseData.error("该用户已注销");
         }
         //情况3：根据用户信息查询，该用户已冻结
         if (CommonConstant.USER_FREEZE.equals(sysUser.getStatus())) {
             sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUserName() + "已冻结！", CommonConstant.LOG_TYPE_1, null);
-            result.error500("该用户已冻结");
-            return result;
+            return ResponseData.error("该用户已冻结");
         }
-        return result;
+        return ResponseData.success();
     }
 }

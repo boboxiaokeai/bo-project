@@ -16,7 +16,6 @@ import java.net.UnknownHostException;
 public class ProjectAdminApplication {
 
     public static void main(String[] args) throws UnknownHostException{
-        //SpringApplication.run(ProjectAdminApplication.class, args);
         System.setProperty("spring.devtools.restart.enabled", "true");
         ConfigurableApplicationContext application = SpringApplication.run(ProjectAdminApplication.class, args);
         Environment env = application.getEnvironment();

@@ -7,11 +7,11 @@ import cn.bo.project.admin.modules.system.service.ISysLogService;
 import cn.bo.project.admin.modules.system.service.ISysPostService;
 import cn.bo.project.admin.modules.system.service.ISysRoleService;
 import cn.bo.project.admin.modules.system.service.ISysUserService;
-import cn.bo.project.base.api.ResultBean;
 import cn.bo.project.base.constant.UserConstants;
 import cn.bo.project.base.core.api.ISysBaseAPI;
 import cn.bo.project.base.core.model.LoginUser;
 import cn.bo.project.base.core.query.QueryGenerator;
+import cn.bo.project.base.response.ResponseData;
 import cn.bo.project.base.utils.JwtUtil;
 import cn.bo.project.base.utils.RedisUtil;
 
@@ -62,74 +62,67 @@ public class SysUserController {
 
 	@ApiOperation("系统用户列表")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ResultBean<Object> queryPageList(SysUser user, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-											@RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
+	public ResponseData queryPageList(SysUser user, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
 		/*QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
 		Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);
 		IPage<SysUser> pageList = sysUserService.page(page, queryWrapper);*/
 		List<SysUser> list = sysUserService.selectUserList(user);
-		return ResultBean.ok(list);
+		return ResponseData.success(list);
 	}
 
 	@ApiOperation("用户详情")
 	@GetMapping(value = { "/", "/{userId}" })
-	public ResultBean getInfo(@PathVariable(value = "userId", required = false) Long userId)
-	{
+	public ResponseData getInfo(@PathVariable(value = "userId", required = false) Long userId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("roles", roleService.selectRoleAll());
 		map.put("posts", postService.selectPostAll());
-		if (StringUtils.isNotNull(userId))
-		{
+		if (StringUtils.isNotNull(userId)) {
 			map.put("data", sysUserService.selectUserById(userId));
 			map.put("postIds", postService.selectPostListByUserId(userId));
 			map.put("roleIds", roleService.selectRoleListByUserId(userId));
 		}
-		return ResultBean.ok(map);
+		return ResponseData.success(map);
 	}
 
 
 	@ApiOperation("用户编辑")
 	@PutMapping
-	public ResultBean edit(@Validated @RequestBody SysUser user)
-	{
+	public ResponseData edit(@Validated @RequestBody SysUser user) {
 		sysUserService.checkUserAllowed(user);
-		if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(user)))
-		{
-			return ResultBean.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
+		if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkPhoneUnique(user))) {
+			return ResponseData.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
 		}
-		else if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkEmailUnique(user)))
-		{
-			return ResultBean.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
+		else if (UserConstants.NOT_UNIQUE.equals(sysUserService.checkEmailUnique(user))) {
+			return ResponseData.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
 		}
 		user.setUpdateBy("admin");
-		return ResultBean.ok(sysUserService.updateUser(user));
+		return ResponseData.success(sysUserService.updateUser(user));
 	}
 
 
 	@ApiOperation("用户删除")
 	@DeleteMapping("/{userIds}")
-	public ResultBean remove(@PathVariable Long[] userIds)
-	{
-		return ResultBean.ok(sysUserService.deleteUserByIds(userIds));
+	public ResponseData remove(@PathVariable Long[] userIds) {
+		return ResponseData.success(sysUserService.deleteUserByIds(userIds));
 	}
 
 
 
 	@ApiOperation("用户状态修改")
 	@PutMapping("/changeStatus")
-	public ResultBean changeStatus(@RequestBody SysUser user)
-	{
+	public ResponseData changeStatus(@RequestBody SysUser user) {
 		sysUserService.checkUserAllowed(user);
 		user.setUpdateBy("admin");
-		return ResultBean.ok(sysUserService.updateUserStatus(user));
+		return ResponseData.success(sysUserService.updateUserStatus(user));
 	}
 
 	@ApiOperation("个人信息")
 	@GetMapping("/profile")
-	public ResultBean profile(HttpServletRequest request, HttpServletResponse response){
+	public ResponseData profile(HttpServletRequest request, HttpServletResponse response){
 		String token = request.getHeader(DefContants.X_ACCESS_TOKEN);
 		if(oConvertUtils.isEmpty(token)) {
-			return ResultBean.error("token不能为空！");
+			return ResponseData.error("token不能为空！");
 		}
 		String username = JwtUtil.getUsername(token);
 		LoginUser sysUser = sysBaseAPI.getUserByName(username);
@@ -138,7 +131,7 @@ public class SysUserController {
 		map.put("logs", logService.selectUserLog(sysUser.getUserName()));
 		map.put("roleGroup", sysUserService.selectUserRoleGroup(sysUser.getUserName()));
 		map.put("postGroup", sysUserService.selectUserPostGroup(sysUser.getUserName()));
-		return ResultBean.ok(map);
+		return ResponseData.success(map);
 	}
 
 }

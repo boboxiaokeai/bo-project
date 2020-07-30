@@ -12,18 +12,6 @@
     <artifactId>project-base</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>project-base</name>
-    <description>Demo project for Spring Boot</description>
-
-    <repositories>
-        <repository>
-            <id>aliyun</id>
-            <name>aliyun Repository</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <!--<build>
         <plugins>

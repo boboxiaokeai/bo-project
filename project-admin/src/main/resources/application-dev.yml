@@ -1,16 +1,13 @@
 server:
   port: 8888
   tomcat:
-    #请求正文的最大值，10MB, -1不限制
-    max-swallow-size: -1
+    max-swallow-size: -1  #请求正文的最大值，10MB, -1不限制
   servlet:
     context-path: /admin
-    #是否开启压缩，默认为false
   compression:
-    enabled: true
+    enabled: true #是否开启压缩，默认为false
     min-response-size: 1024
-    #指定要压缩的MIME type，多个以逗号分隔.
-    mime-types: application/javascript,application/json,application/xml,text/html,text/xml,text/plain,text/css,image/*
+    mime-types: application/javascript,application/json,application/xml,text/html,text/xml,text/plain,text/css,image/*  #指定要压缩的MIME type，多个以逗号分隔.
 
 management:
   endpoints:
@@ -27,10 +24,6 @@ spring:
     remote:
       restart:
         enabled: true
-  ##quartz定时任务,采用数据库方式
-    ##quartz:
-    ##job-store-type: jdbc
-  #json 时间戳统一转换
   jackson:
     date-format:   yyyy-MM-dd HH:mm:ss
     time-zone:   GMT+8
@@ -110,7 +103,7 @@ mybatis-plus:
     banner: false
     db-config:
       #主键类型  0:"数据库ID自增",1:"该类型为未设置主键类型", 2:"用户输入ID",3:"全局唯一ID (数字类型唯一ID)", 4:"全局唯一ID UUID",5:"字符串全局唯一ID (idWorker 的字符串表示)";
-      id-type: 3
+      id-type: id_worker
       # 默认数据库表下划线命名
       table-underline: true
     #configuration:

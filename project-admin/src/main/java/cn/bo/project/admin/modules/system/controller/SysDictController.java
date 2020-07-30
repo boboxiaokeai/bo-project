@@ -2,7 +2,7 @@ package cn.bo.project.admin.modules.system.controller;
 
 import cn.bo.project.admin.modules.system.entity.SysDict;
 import cn.bo.project.admin.modules.system.service.ISysDictService;
-import cn.bo.project.base.api.ResultBean;
+import cn.bo.project.base.response.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,47 +28,41 @@ public class SysDictController {
 
     @ApiOperation("字典列表")
     @GetMapping("/list")
-    public ResultBean list(SysDict sysDict)
-    {
+    public ResponseData list(SysDict sysDict) {
         List<SysDict> list = dictDataService.selectDictDataList(sysDict);
-        return ResultBean.ok(list);
+        return ResponseData.success(list);
     }
 
 
     @ApiOperation("字典详情")
     @GetMapping(value = "/{dictCode}")
-    public ResultBean getInfo(@PathVariable Long dictCode)
-    {
-        return ResultBean.ok(dictDataService.selectDictDataById(dictCode));
+    public ResponseData getInfo(@PathVariable Long dictCode) {
+        return ResponseData.success(dictDataService.selectDictDataById(dictCode));
     }
 
     @ApiOperation("根据字典类型查询字典数据信息")
     @GetMapping(value = "/dictType/{dictType}")
-    public ResultBean dictType(@PathVariable String dictType)
-    {
-        return ResultBean.ok(dictDataService.selectDictDataByType(dictType));
+    public ResponseData dictType(@PathVariable String dictType) {
+        return ResponseData.success(dictDataService.selectDictDataByType(dictType));
     }
 
     @ApiOperation("字典新增")
     @PostMapping
-    public ResultBean add(@Validated @RequestBody SysDict dict)
-    {
+    public ResponseData add(@Validated @RequestBody SysDict dict) {
         dict.setCreateBy("admin");
-        return ResultBean.ok(dictDataService.insertDictData(dict));
+        return ResponseData.success(dictDataService.insertDictData(dict));
     }
 
     @ApiOperation("字典更新")
     @PutMapping
-    public ResultBean edit(@Validated @RequestBody SysDict dict)
-    {
+    public ResponseData edit(@Validated @RequestBody SysDict dict) {
         dict.setUpdateBy("admin");
-        return ResultBean.ok(dictDataService.updateDictData(dict));
+        return ResponseData.success(dictDataService.updateDictData(dict));
     }
 
     @ApiOperation("字典删除")
     @DeleteMapping("/{dictCodes}")
-    public ResultBean remove(@PathVariable Long[] dictCodes)
-    {
-        return ResultBean.ok(dictDataService.deleteDictDataByIds(dictCodes));
+    public ResponseData remove(@PathVariable Long[] dictCodes) {
+        return ResponseData.success(dictDataService.deleteDictDataByIds(dictCodes));
     }
 }

@@ -1,13 +1,6 @@
 package cn.bo.project.admin.modules.system.entity;
 
 import cn.bo.project.base.core.base.entity.BaseEntity;
-import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -99,8 +92,6 @@ public class SysUser extends BaseEntity {
         this.realName = realName;
     }
 
-    @NotBlank(message = "用户账号不能为空")
-    @Size(min = 0, max = 30, message = "用户账号长度不能超过30个字符")
     public String getUserName()
     {
         return userName;
@@ -111,8 +102,6 @@ public class SysUser extends BaseEntity {
         this.userName = userName;
     }
 
-    @Email(message = "邮箱格式不正确")
-    @Size(min = 0, max = 50, message = "邮箱长度不能超过50个字符")
     public String getEmail()
     {
         return email;

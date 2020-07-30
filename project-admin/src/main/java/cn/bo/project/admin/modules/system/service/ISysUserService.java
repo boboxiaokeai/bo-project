@@ -2,8 +2,7 @@ package cn.bo.project.admin.modules.system.service;
 
 
 import cn.bo.project.admin.modules.system.entity.SysUser;
-import cn.bo.project.base.api.ResultBean;
-import com.alibaba.fastjson.JSONObject;
+import cn.bo.project.base.response.ResponseData;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -177,5 +176,5 @@ public interface ISysUserService extends IService<SysUser> {
      * @param sysUser 用户信息
      * @return 结果
      */
-    ResultBean checkUserIsEffective(SysUser sysUser);
+    ResponseData checkUserIsEffective(SysUser sysUser);
 }

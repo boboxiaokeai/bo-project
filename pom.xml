@@ -6,22 +6,18 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.2.RELEASE</version>
+        <version>2.3.2.RELEASE</version>
     </parent>
 
     <groupId>cn.bo.project</groupId>
     <artifactId>bo-project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bo-projecr</name>
+    <name>bo-project</name>
     <packaging>pom</packaging>
-    <description>Demo project for Spring Boot</description>
 
     <modules>
         <module>project-admin</module>
         <module>project-base</module>
-        <module>project-quartz</module>
-        <module>project-gen</module>
-        <module>project-elasticsearch</module>
     </modules>
 
     <repositories>

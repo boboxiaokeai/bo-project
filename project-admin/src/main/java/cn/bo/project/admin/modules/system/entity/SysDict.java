@@ -12,8 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @PackageName cn.bo.project.admin.modules.system.entity
  **/
 @Data
-public class SysDict extends BaseEntity
-{
+public class SysDict extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 字典编码 */
