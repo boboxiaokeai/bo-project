@@ -69,10 +69,8 @@ public class LoginController {
 		if (!syspassword.equals(userpassword)) {
 			return ResponseData.error("用户名或密码错误");
 		}
-//		userInfo(sysUser, ResponseData);
 		sysBaseAPI.addLog("用户: " + username + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
-
-		return ResponseData.success();
+		return ResponseData.success(userInfo(sysUser).getData());
 	}
 	
 	/**
@@ -115,6 +113,7 @@ public class LoginController {
 	 * @return
 	 */
 	private ResponseData userInfo(SysUser sysUser) {
+		ResponseData responseData = new ResponseData();
 		String syspassword = sysUser.getPassword();
 		String username = sysUser.getUserName();
 		// 生成token
@@ -126,7 +125,8 @@ public class LoginController {
 		JSONObject obj = new JSONObject();
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
-		return ResponseData.success(obj);
+		responseData.setData(obj);
+		return responseData;
 	}
 
 	/**
@@ -150,12 +150,11 @@ public class LoginController {
 			map.put("codekey", codekey);
 			map.put("img", Base64.encode(stream.toByteArray()));
 			map.put("code", verifyCode);
-			ResponseData.success("获取成功");
+			return ResponseData.success(map);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return ResponseData.error("获取验证码失败");
 		}
-		return  ResponseData.success();
 	}
 
 	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
@@ -196,42 +195,6 @@ public class LoginController {
 		JSONObject obj = new JSONObject();
 		obj.put("menu", RouterModel);
 		return ResponseData.success(obj);
-	}
-
-	public static void main(String[] args) {
-		JSONObject jsonObject1 = new JSONObject();
-		jsonObject1.put("id","1");
-		jsonObject1.put("name","玫瑰花");
-		jsonObject1.put("price","10");
-		jsonObject1.put("img","http://keytest.oss-cn-zhangjiakou.aliyuncs.com/upload/store/1/2020/02/3b2a8f1d-b9 a6-430f-9589-27bab5a9e3ff.png");
-		jsonObject1.put("gifimg","https://zmmapp.oss-cn-beijing.aliyuncs.com/upload/store/1/2020/06/424d4c4caf414f2eb03901d4eb354fbb_600-452.gif");
-		jsonObject1.put("contribute","100");
-
-
-		JSONObject jsonObject2 = new JSONObject();
-		jsonObject2.put("id","2");
-		jsonObject2.put("name","戒指");
-		jsonObject2.put("price","100");
-		jsonObject2.put("img","http://keytest.oss-cn-zhangjiakou.aliyuncs.com/upload/store/1/2020/02/3b2a8f1d-b9 a6-430f-9589-27bab5a9e3ff.png");
-		jsonObject2.put("gifimg","https://zmmapp.oss-cn-beijing.aliyuncs.com/upload/store/1/2020/06/6849d189604949d3a2cfa28fbd1245a8_500-498.gif");
-		jsonObject1.put("contribute","1000");
-
-		JSONObject jsonObject3 = new JSONObject();
-		jsonObject3.put("id","3");
-		jsonObject3.put("name","巧克力");
-		jsonObject3.put("price","200");
-
-		jsonObject3.put("img","https://zmmapp.oss-cn-beijing.aliyuncs.com/upload/store/1/2020/06/e8979d33d48648d685b9916b9fddc471_500-316.jpg");
-		jsonObject3.put("gifimg","https://zmmapp.oss-cn-beijing.aliyuncs.com/upload/store/1/2020/06/2ef9b1a11c5b42e897356f6cdea21062_400-219.gif");
-		jsonObject3.put("contribute","2000");
-
-		JSONArray jsonArray = new JSONArray();
-		jsonArray.add(jsonObject1);
-		jsonArray.add(jsonObject2);
-		jsonArray.add(jsonObject3);
-
-		System.out.println(jsonArray.toJSONString());
-
 	}
 
 }

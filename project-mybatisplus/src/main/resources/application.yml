@@ -1,0 +1,23 @@
+server:
+  port: 8866
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver #使用cj.jdbc.Driver时url要设置时区serverTimezone参数
+    url: jdbc:mysql://127.0.0.1:3306/bo-project?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+mybatis-plus:
+  #Mapper.xml文件路径,如果是在src/main/java目录下 classpath:/cn/bo/project/mapper/*Mapper.xml,如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/cn/bo/project/mapper/*Mapper.xml
+  #实体类路径，多个package用逗号或者分号分隔
+  global-config:
+    banner: true  #关闭自带的banner
+    db-config:
+      id-type: id_worker  #主键类型
+      table-underline: true   #默认数据库表下划线命名
+  typeAliasesPackage: cn.bo.project.entity  #别名,配置之后Mapper.xml中resultMap、parameterType中不用写类的全路径
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
