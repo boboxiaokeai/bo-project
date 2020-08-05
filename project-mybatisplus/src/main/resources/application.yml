@@ -9,8 +9,8 @@ spring:
     password: 123456
 
 mybatis-plus:
-  #Mapper.xml文件路径,如果是在src/main/java目录下 classpath:/cn/bo/project/mapper/*Mapper.xml,如果是放在resource目录 classpath:/mapper/*Mapper.xml
-  mapper-locations: classpath:/cn/bo/project/mapper/*Mapper.xml
+  #指定Mapper.xml的路径，如果xml文件不在resources目录下需要在pom文件中指定resource
+  mapper-locations: classpath*:cn/bo/project/mapper/xml/*Mapper.xml
   #实体类路径，多个package用逗号或者分号分隔
   global-config:
     banner: true  #关闭自带的banner

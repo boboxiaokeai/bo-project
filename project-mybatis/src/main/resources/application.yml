@@ -10,7 +10,7 @@ spring:
 
 mybatis:
   type-aliases-package: cn.bo.project.entity  #别名,配置之后Mapper.xml中resultMap、parameterType中不用写类的全路径
-  mapper-locations: classpath*:cn/bo/project/mapper/xml/*Mapper.xml #指定Mapper.xml的路径，如果x'm'l文件不在resources目录下
+  mapper-locations: classpath*:cn/bo/project/mapper/xml/*Mapper.xml #指定Mapper.xml的路径，如果xml文件不在resources目录下需要在pom文件中指定resource
   #控制台打印sql
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

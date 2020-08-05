@@ -4,6 +4,8 @@ import cn.bo.project.Response.ResponseData;
 import cn.bo.project.entity.SysLog;
 import cn.bo.project.mapper.SysLogMapper;
 import cn.bo.project.page.PageInfo;
+import cn.bo.project.service.SysLogService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -29,6 +31,8 @@ public class SysLogController {
 	
 	@Autowired
 	private SysLogMapper sysLogMapper;
+	@Autowired
+	private SysLogService sysLogService;
 
 	@ApiOperation("新增")
 	@PostMapping("/add")
@@ -49,7 +53,8 @@ public class SysLogController {
 	@ApiOperation("列表")
 	@GetMapping
 	public ResponseData list() {
-		List<SysLog> sysLogList = sysLogMapper.selectList(null);
+		QueryWrapper sysLogQueryWrapper = new QueryWrapper<>().eq("method","1");
+		List<SysLog> sysLogList = sysLogMapper.selectList(sysLogQueryWrapper);
 		return ResponseData.success(sysLogList);
 	}
 
@@ -59,20 +64,17 @@ public class SysLogController {
 		return ResponseData.success(sysLogMapper.deleteById(id));
 	}
 
-	@ApiOperation("列表-分页")
-	@DeleteMapping
+	@ApiOperation("列表-分页Mybatis-plus")
+	@GetMapping("/page")
 	public IPage<SysLog> page(@RequestParam("current") Long current,@RequestParam("pageSize") Long pageSize) {
 		IPage<SysLog> page = new Page<>(current, pageSize);
-		PageInfo pageInfo = new PageInfo(1,10);
 		return sysLogMapper.selectPage(page,null);
 	}
 
-	/*public IPage<User> selectUserPage(Page<User> page, Integer state) {
-		// 不进行 count sql 优化，解决 MP 无法自动优化 SQL 问题，这时候你需要自己查询 count 部分
-		// page.setOptimizeCountSql(false);
-		// 当 total 为小于 0 或者设置 setSearchCount(false) 分页插件不会进行 count 查询
-		// 要点!! 分页返回的对象与传入的对象是同一个
-		return userMapper.selectPageVo(page, state);
-	}*/
-	
+	@ApiOperation("列表-分页customer")
+	@GetMapping("/pageList")
+	public PageInfo pageList(SysLog sysLog) {
+		return this.sysLogService.pageList(sysLog);
+	}
+
 }
