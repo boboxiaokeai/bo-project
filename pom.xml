@@ -18,6 +18,8 @@
     <modules>
         <module>project-admin</module>
         <module>project-base</module>
+        <module>project-common</module>
+        <module>project-system</module>
     </modules>
 
     <repositories>
@@ -99,7 +101,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.47</version>
             <scope>runtime</scope>
         </dependency>
         <!--JWT-->
@@ -178,6 +179,11 @@
             <dependency>
                 <groupId>cn.bo.project</groupId>
                 <artifactId>project-base</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.bo.project</groupId>
+                <artifactId>project-common</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
