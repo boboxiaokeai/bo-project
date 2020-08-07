@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Author zhangbo
  * @Date 2020/1/2 16:26
  * @Description IP工具类
- * @PackageName cn.bo.project.base.utils
+ * @PackageName cn.bo.project.common.utils
  **/
 public class IPUtils {
 	private static Logger logger = LoggerFactory.getLogger(IPUtils.class);

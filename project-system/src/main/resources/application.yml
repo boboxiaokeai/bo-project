@@ -39,7 +39,7 @@ mybatis-plus:
     db-config:
       id-type: id_worker  #主键类型
       table-underline: true   #默认数据库表下划线命名
-  typeAliasesPackage: cn.bo.project.entity  #别名,配置之后Mapper.xml中resultMap、parameterType中不用写类的全路径
+  typeAliasesPackage: cn.bo.project.system.entity  #别名,配置之后Mapper.xml中resultMap、parameterType中不用写类的全路径
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 

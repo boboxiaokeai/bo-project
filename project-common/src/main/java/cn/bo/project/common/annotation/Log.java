@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @Author zhangbo
  * @Date 2020/1/2 16:11
  * @Description 操作日志注解
- * @PackageName cn.bo.project.base.annotation
+ * @PackageName cn.bo.project.common.annotation
  **/
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -4,14 +4,14 @@ package cn.bo.project.common.constant;
  * @Author zhangbo
  * @Date 2020/1/2 16:42
  * @Description 通用常量
- * @PackageName cn.bo.project.base.constant
+ * @PackageName cn.bo.project.common.constant
  **/
 public interface CommonConstant {
 
 	/**
 	 * ACCESS_TOKEN
 	 */
-	String ACCESS_TOKEN = "ACCESS_TOKEN";
+	String ACCESS_TOKEN = "X-Access-Token";
 
     /**
      * REFRESH_TOKEN

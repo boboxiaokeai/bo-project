@@ -11,7 +11,7 @@ import java.util.List;
  * @Author zhangbo
  * @Date 2020/2/9 22:34
  * @Description 用户实体类
- * @PackageName cn.bo.project.admin.modules.system.entity
+ * @PackageName cn.bo.project.system.entity
  **/
 public class SysUser extends BaseEntity {
     private static final long serialVersionUID = 1L;

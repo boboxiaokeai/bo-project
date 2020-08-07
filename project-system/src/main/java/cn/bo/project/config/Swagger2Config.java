@@ -19,7 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @Author zhangbo
  * @Date 2020/1/8 14:41
  * @Description swagger2配置类
- * @PackageName cn.bo.project.admin.config
+ * @PackageName cn.bo.project.config
  **/
 @Configuration
 @EnableSwagger2

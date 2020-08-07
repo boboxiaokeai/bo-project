@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @Author zhangbo
  * @Date 2020/2/9 22:34
  * @Description 角色实体类
- * @PackageName cn.bo.project.admin.modules.system.entity
+ * @PackageName cn.bo.project.system.entity
  **/
 public class SysRole extends BaseEntity {
     private static final long serialVersionUID = 1L;

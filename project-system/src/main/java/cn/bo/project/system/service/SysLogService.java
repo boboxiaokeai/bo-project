@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Author zhangbo
  * @Date 2020/1/4 13:16
  * @Description 系统日志service接口
- * @PackageName cn.bo.project.admin.modules.system.service
+ * @PackageName cn.bo.project.system.service
  **/
 public interface SysLogService extends IService<SysLog> {
 

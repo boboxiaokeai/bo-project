@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
  * @Author zhangbo
  * @Date 2020/1/4 13:12
  * @Description 系统日志mapper接口
- * @PackageName cn.bo.project.admin.modules.system.mapper
+ * @PackageName cn.bo.project.system.mapper
  **/
 public interface SysLogMapper extends BaseMapper<SysLog> {
 

@@ -10,7 +10,7 @@ import java.util.List;
  * @Author zhangbo
  * @Date 2020/2/9 22:34
  * @Description 部门实体类
- * @PackageName cn.bo.project.admin.modules.system.entity
+ * @PackageName cn.bo.project.system.entity
  **/
 @Data
 public class SysDept extends BaseEntity {

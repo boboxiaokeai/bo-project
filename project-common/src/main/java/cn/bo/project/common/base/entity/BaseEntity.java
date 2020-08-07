@@ -10,7 +10,7 @@ import java.util.Date;
  * @Author zhangbo
  * @Date 2020/1/3 9:21
  * @Description entity基类
- * @PackageName cn.bo.project.base.core.base.entity
+ * @PackageName cn.bo.project.common.core.base.entity
  **/
 @Data
 public class BaseEntity {

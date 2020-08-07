@@ -10,6 +10,7 @@ import cn.bo.project.system.service.SysLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,7 @@ public class SysLogController {
 	@Log(value = "系统日志详情",operateType = OperateTypeEnum.SELECT)
 	@GetMapping("/detail/{id}")
 	@ApiOperation("系统日志详情")
+	@RequiresPermissions("sys:log:detail")
 	public ResponseData detail(@PathVariable("id") String id) {
 		return ResponseData.success(sysLogService.getById(id));
 	}
@@ -63,6 +65,7 @@ public class SysLogController {
 	@Log(value = "删除系统日志",operateType = OperateTypeEnum.DELETE)
 	@DeleteMapping("/del/{id}")
 	@ApiOperation("删除系统日志")
+	@RequiresPermissions("sys:log:del")
 	public ResponseData del(@PathVariable("id") String id) {
 		sysLogService.removeById(id);
 		return ResponseData.success();
@@ -76,6 +79,7 @@ public class SysLogController {
 	@Log(value = "批量删除系统日志",operateType = OperateTypeEnum.DELETE)
 	@DeleteMapping("/batchDel/{ids}")
 	@ApiOperation("批量删除系统日志")
+	@RequiresPermissions("sys:log:batchDel")
 	public ResponseData batchDel(@PathVariable("ids")String[] ids) {
 		sysLogService.removeByIds(Arrays.asList(ids));
 		return ResponseData.success();

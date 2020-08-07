@@ -4,7 +4,7 @@ package cn.bo.project.common.response;
  * @Author zhangbo
  * @Date 2020/6/23 23:10
  * @Description ResponseData
- * @PackageName cn.bo.project.base.response
+ * @PackageName cn.bo.project.common.response
  **/
 public class ErrorResponseData extends ResponseData{
 
